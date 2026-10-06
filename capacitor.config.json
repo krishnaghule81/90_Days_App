@@ -1,0 +1,16 @@
+{
+  "appId": "com.ninetydays.plan",
+  "appName": "90 Days",
+  "webDir": "www",
+  "backgroundColor": "#160C2B",
+  "plugins": {
+    "LocalNotifications": {
+      "smallIcon": "ic_stat_icon",
+      "iconColor": "#FF6A3D"
+    },
+    "SystemBars": {
+      "insetsHandling": "css",
+      "style": "DARK"
+    }
+  }
+}

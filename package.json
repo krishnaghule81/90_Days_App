@@ -1,0 +1,13 @@
+{
+  "name": "ninety-days",
+  "version": "1.0.0",
+  "private": true,
+  "description": "90-day transformation plan app",
+  "engines": { "node": ">=22" },
+  "dependencies": {
+    "@capacitor/android": "8.5.2",
+    "@capacitor/cli": "8.5.2",
+    "@capacitor/core": "8.5.2",
+    "@capacitor/local-notifications": "8.3.1"
+  }
+}

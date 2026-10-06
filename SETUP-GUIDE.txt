@@ -1,0 +1,63 @@
+90 DAYS APP: SETUP GUIDE (about 15 minutes, one time)
+=====================================================
+
+You need: a computer, and your Android phone.
+
+PART 1: Put the files on GitHub (computer)
+------------------------------------------
+1. Unzip 90-days-app.zip on your computer. You get a folder called "90-days-app".
+2. Go to https://github.com and click "Sign up". Create a free account.
+3. Click the "+" at the top right, then "New repository".
+   - Repository name: 90-days-app
+   - Choose "Public" (so your phone can download the app without logging in;
+     no personal data is in these files)
+   - Tick "Add a README file"
+   - Click "Create repository"
+4. On the new page, click "Add file", then "Upload files".
+5. Open the "90-days-app" folder on your computer, select EVERYTHING inside it
+   (Ctrl+A on Windows, Cmd+A on Mac), and drag it into the GitHub page.
+   Wait until all files finish loading.
+6. Scroll down and click the green "Commit changes" button.
+   Check the file list: you should see folders www, resources, scripts, keys.
+
+PART 2: Start the automatic build (computer)
+--------------------------------------------
+7. Click "Add file", then "Create new file".
+8. In the name box, type exactly:   .github/workflows/build.yml
+   (GitHub turns each "/" into a folder as you type. That's correct.)
+9. Open build-workflow.yml from your unzipped folder in Notepad (or TextEdit),
+   copy all of it, and paste it into the big box on GitHub.
+10. Click "Commit changes", then "Commit changes" again.
+11. Click the "Actions" tab at the top. You'll see "Build 90 Days app" running
+    (yellow dot). Wait about 8 to 12 minutes until it shows a green tick.
+    If it shows a red X, take a screenshot and send it to Claude.
+
+PART 3: Install on your phone
+-----------------------------
+12. On your phone, open Chrome and go to:
+    https://github.com/YOUR-USERNAME/90-days-app/releases
+    (replace YOUR-USERNAME with your GitHub username)
+13. Tap the latest release, then tap "90-days.apk" to download it.
+14. Open the downloaded file. Android will ask to allow installs from Chrome:
+    tap Settings, turn on "Allow from this source", go back, tap Install.
+    If Play Protect warns you, tap "More details" then "Install anyway".
+    (It warns because the app isn't from the Play Store. It's your own app.)
+15. Open "90 Days". Pick your Day 1, then tap "Turn on reminders" and Allow.
+
+PART 4: Make reminders reliable (phone, 1 minute)
+-------------------------------------------------
+16. Phone Settings > Apps > 90 Days > Battery > choose "Unrestricted".
+17. Xiaomi / Redmi / Poco, Oppo, Vivo, Realme: also turn on "Autostart"
+    for 90 Days (Settings > Apps > 90 Days, or the Security app).
+18. In the app: Me tab > "Send a test in 5 seconds". Close the app and wait.
+    You should get a notification with a chime.
+
+GOOD TO KNOW
+------------
+- Open the app at least once a week: it schedules reminders 10 days ahead.
+- Keep using your normal alarm clock to wake up.
+- Your data stays only on this phone. Use Me tab > "Copy backup" now and then
+  and paste it somewhere safe (for example WhatsApp "Message yourself").
+- Updates: if Claude gives you a new www/index.html, upload it to the www folder
+  on GitHub (Add file > Upload files, inside www). A new build starts by itself.
+  Install the new APK over the old one. Your data is kept.
