@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#160C2B">
+<title>90 Days</title>
+<style>
+@font-face{font-family:"Unbounded";src:url("fonts/unbounded-800.woff2") format("woff2");font-weight:800;font-display:swap}
+:root{
+  --bg:#160C2B; --bg2:#1F1340; --card:#261A4E; --card2:#2F2160; --line:#3A2C70;
+  --ink:#FFF6EE; --muted:#B9AEDB; --dim:#7F73A8;
+  --red:#FF4D6D; --orange:#FF8A3D; --gold:#FFC53D; --mint:#43F3B0; --sky:#6EC8FF;
+  --sun:linear-gradient(120deg,#FF4D6D 0%,#FF8A3D 50%,#FFC53D 100%);
+  --top:max(var(--safe-area-inset-top,0px),env(safe-area-inset-top,0px),12px);
+  --bot:max(var(--safe-area-inset-bottom,0px),env(safe-area-inset-bottom,0px));
+  --display:"Unbounded","Arial Black",system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Roboto,"Segoe UI",system-ui,-apple-system,sans-serif;font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased;overscroll-behavior:none}
+body{background:radial-gradient(120% 60% at 80% -10%,rgba(255,77,109,.22),transparent 60%),radial-gradient(90% 50% at 0% 0%,rgba(110,200,255,.10),transparent 60%),var(--bg);min-height:100vh}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+input,select,textarea{font:inherit;color:var(--ink)}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.wrap{max-width:560px;margin:0 auto;padding:calc(var(--top) + 6px) 16px calc(var(--bot) + 104px)}
+
+/* HUD */
+.hud{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center}
+.lv{width:52px;height:52px;border-radius:16px;background:var(--sun);display:grid;place-items:center;color:#2A0E1E;box-shadow:0 6px 20px rgba(255,90,80,.35)}
+.lv b{font-family:var(--display);font-size:20px;line-height:1;display:block;text-align:center}
+.lv small{display:block;font-size:10px;font-weight:700;text-align:center;margin-top:1px}
+.xpbox .row1{display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}
+.xpbox .row1 strong{color:var(--ink);font-weight:700}
+.bar{height:10px;border-radius:99px;background:var(--card);overflow:hidden;margin-top:5px}
+.bar i{display:block;height:100%;background:var(--sun);border-radius:99px;transition:width .5s cubic-bezier(.2,.9,.3,1.2)}
+.streak{display:flex;align-items:center;gap:4px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:8px 10px;font-weight:800;font-family:var(--display);font-size:16px}
+.streak.hot{background:linear-gradient(160deg,#4A1630,#3A1A12);border-color:#7A2E3A}
+.flame{font-size:18px}
+
+.datebar{display:flex;align-items:center;gap:8px;margin:14px 0 4px}
+.datebar .d{flex:1;font-weight:700}
+.chipbtn{background:var(--card);border:1px solid var(--line);border-radius:12px;min-width:40px;height:38px;padding:0 12px;font-weight:700}
+.chipbtn.sun{background:var(--sun);color:#2A0E1E;border:0}
+
+/* Today hero */
+.hero{display:grid;grid-template-columns:132px 1fr;gap:16px;align-items:center;margin-top:10px}
+.ring{position:relative;width:132px;height:132px}
+.ring svg{width:132px;height:132px;transform:rotate(-90deg)}
+.ring .c{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
+.ring .c b{font-family:var(--display);font-size:28px;line-height:1;display:block}
+.ring .c span{font-size:12px;color:var(--muted)}
+.hero h1{font-family:var(--display);font-size:26px;line-height:1.05;margin:0}
+.hero .ph{color:var(--muted);font-size:14px;margin-top:4px}
+.hero .today-xp{margin-top:10px;display:inline-flex;gap:6px;align-items:center;background:rgba(255,197,61,.12);color:var(--gold);border-radius:99px;padding:4px 10px;font-weight:700;font-size:14px}
+
+.next{margin-top:16px;border-radius:20px;padding:16px;background:var(--sun);color:#2A0E1E;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;box-shadow:0 10px 30px rgba(255,90,80,.30)}
+.next .lbl{font-size:13px;font-weight:700;opacity:.8}
+.next .t{font-family:var(--display);font-size:18px;line-height:1.15;margin:3px 0}
+.next .when{font-weight:700;font-size:14px}
+.next button{background:#2A0E1E;color:var(--gold);border-radius:16px;padding:14px 16px;font-weight:800;font-size:15px;white-space:nowrap}
+.next.clear{background:linear-gradient(120deg,#1E6B55,#43F3B0)}
+
+.quote{margin:14px 2px 0;color:var(--muted);font-size:14px;font-style:italic}
+
+/* Quest list */
+.sec{margin-top:22px}
+.sec h2{font-family:var(--display);font-size:18px;margin:0 0 10px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.sec h2 small{font-family:Roboto,system-ui,sans-serif;font-size:13px;color:var(--muted);font-weight:500}
+.q{display:grid;grid-template-columns:50px 1fr 52px;gap:10px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:12px;margin-bottom:10px;transition:transform .15s}
+.q .tm{font-size:14px;font-weight:800;color:var(--sky);line-height:1.15}
+.q .tm small{display:block;color:var(--dim);font-weight:600;font-size:12px}
+.q .tt{font-weight:700;line-height:1.25}
+.q .dt{font-size:13.5px;color:var(--muted);margin-top:2px}
+.q .tags{margin-top:6px;display:flex;gap:6px;flex-wrap:wrap}
+.pill{font-size:11.5px;font-weight:700;border-radius:99px;padding:2px 8px;background:var(--card2);color:var(--muted)}
+.pill.xp{background:rgba(255,197,61,.14);color:var(--gold)}
+.pill.boss{background:rgba(255,77,109,.18);color:#FF8FA3}
+.pill.late{background:rgba(255,138,61,.15);color:var(--orange)}
+.pill.opt{background:rgba(110,200,255,.14);color:var(--sky)}
+.chk{width:48px;height:48px;border-radius:16px;border:2.5px solid var(--line);display:grid;place-items:center;background:var(--bg2)}
+.chk svg{width:26px;height:26px;opacity:0;transform:scale(.4);transition:all .25s cubic-bezier(.2,.9,.3,1.5)}
+.q.done{background:linear-gradient(120deg,rgba(255,77,109,.16),rgba(255,197,61,.10));border-color:rgba(255,138,61,.45)}
+.q.done .tt{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--orange)}
+.q.done .chk{background:var(--sun);border-color:transparent}
+.q.done .chk svg{opacity:1;transform:scale(1)}
+.q.pop .chk{animation:pop .45s}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.25) rotate(-6deg)}100%{transform:scale(1)}}
+
+.rules .r{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin-bottom:8px;font-size:14.5px}
+.rules .r b{color:var(--gold)}
+.rules .r.warn{border-color:var(--red)}
+.banner{margin-top:16px;border-radius:18px;padding:14px 16px;background:linear-gradient(135deg,#3B1F73,#25174F);border:1px solid #5A3FA8}
+.banner h3{font-family:var(--display);font-size:16px;margin:0 0 6px}
+.banner ul{margin:0;padding-left:18px;color:var(--muted);font-size:14px}
+
+/* Cards generic */
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;margin-top:14px}
+.card h2{font-family:var(--display);font-size:18px;margin:0 0 4px}
+.muted{color:var(--muted);font-size:14px}
+.btn{background:var(--sun);color:#2A0E1E;border-radius:14px;padding:13px 18px;font-weight:800}
+.btn.ghost{background:var(--card2);color:var(--ink);border:1px solid var(--line)}
+.btn.danger{background:transparent;color:#FF8FA3;border:1px solid #7A2E3A}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}
+
+/* Workout */
+.boss{border-radius:22px;padding:16px;background:linear-gradient(140deg,#4B1430,#2A1550);border:1px solid #7A2E52;margin-top:14px}
+.boss .top{display:flex;justify-content:space-between;align-items:center}
+.boss h2{font-family:var(--display);font-size:20px;margin:2px 0 0}
+.boss .hp{height:14px;border-radius:99px;background:rgba(0,0,0,.35);overflow:hidden;margin-top:10px}
+.boss .hp i{display:block;height:100%;background:linear-gradient(90deg,#FF4D6D,#FF8A3D);transition:width .4s}
+.boss .hpt{font-size:13px;color:#FFB3C1;margin-top:6px;display:flex;justify-content:space-between}
+.boss.dead{background:linear-gradient(140deg,#14503F,#1E2E5A);border-color:#2F8F72}
+.seg{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.seg button{background:var(--card2);border:1px solid var(--line);border-radius:99px;padding:8px 14px;font-weight:700;font-size:14px}
+.seg button.on{background:var(--ink);color:var(--bg)}
+.ex{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-top:10px}
+.ex .h{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.ex .n{font-weight:800}
+.ex .s{color:var(--sky);font-weight:700;font-size:14px;text-align:right;max-width:46%}
+.dots{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
+.dot{width:46px;height:46px;border-radius:14px;border:2px dashed var(--line);display:grid;place-items:center;font-weight:800;color:var(--dim);background:var(--bg2)}
+.dot.on{border:0;background:var(--sun);color:#2A0E1E}
+.ex input{width:100%;margin-top:10px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.ex .last{font-size:12.5px;color:var(--dim);margin-top:6px}
+.restpill{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--bot) + 84px);z-index:30;background:#0E0820;border:1px solid var(--gold);border-radius:99px;padding:10px 12px 10px 18px;display:flex;gap:10px;align-items:center;box-shadow:0 10px 30px rgba(0,0,0,.5);white-space:nowrap}
+.restpill b{font-family:var(--display);font-size:20px;color:var(--gold);min-width:64px}
+.restpill button{background:var(--card2);border-radius:99px;padding:6px 12px;font-weight:700;font-size:13px}
+
+/* Fuel */
+.meter .big{font-family:var(--display);font-size:32px;line-height:1;margin-top:8px}
+.meter .big small{font-size:14px;color:var(--muted);font-family:Roboto,system-ui,sans-serif;font-weight:500}
+.mbar{height:16px;border-radius:99px;background:var(--bg2);overflow:hidden;margin-top:10px;position:relative}
+.mbar i{display:block;height:100%;background:var(--sun);transition:width .4s cubic-bezier(.2,.9,.3,1.2)}
+.mbar .goal{position:absolute;top:0;bottom:0;width:2px;background:var(--ink);opacity:.6}
+.foods{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.foods button{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:8px 10px;font-size:13.5px;font-weight:600;text-align:left}
+.foods button b{color:var(--gold)}
+.foods button:active{transform:scale(.95)}
+.glasses{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:12px}
+.glass{aspect-ratio:3/4;border-radius:8px 8px 14px 14px;border:2px solid var(--line);background:var(--bg2);position:relative;overflow:hidden}
+.glass i{position:absolute;left:0;right:0;bottom:0;height:0;background:linear-gradient(180deg,#6EC8FF,#3A7BFF);transition:height .35s}
+.glass.on i{height:78%}
+.picks .p{display:grid;grid-template-columns:86px 1fr;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.picks .p:first-of-type{border-top:0}
+.picks .p span{color:var(--muted);font-size:14px}
+details{border-top:1px solid var(--line);padding:12px 0}
+details:first-of-type{border-top:0}
+summary{font-weight:700;cursor:pointer}
+details ul{margin:8px 0 0;padding-left:20px;color:var(--muted);font-size:14.5px}
+details li{margin:4px 0}
+.tbl{overflow-x:auto;margin-top:8px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{color:var(--muted);font-weight:600;white-space:nowrap}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+
+/* Stats */
+.stats3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:12px 6px;text-align:center}
+.stat b{display:block;font-family:var(--display);font-size:20px}
+.stat span{font-size:12px;color:var(--muted)}
+.heat{display:grid;grid-template-columns:repeat(15,minmax(0,1fr));gap:4px;margin-top:10px}
+.heat button{aspect-ratio:1;border-radius:5px;background:var(--bg2);padding:0}
+.heat .l1{background:#5A2A3E}.heat .l2{background:#B2463F}.heat .l3{background:var(--orange)}.heat .l4{background:var(--gold)}
+.heat .fu{opacity:.35}.heat .cur{outline:2px solid var(--ink);outline-offset:1px}
+.badges{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:10px}
+.bdg{background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:10px 4px;text-align:center;min-height:92px}
+.bdg .e{font-size:28px;filter:grayscale(1) brightness(.5)}
+.bdg .bn{overflow-wrap:anywhere;font-size:11.5px;font-weight:700;color:var(--dim);margin-top:4px;line-height:1.2}
+.bdg.got{background:linear-gradient(160deg,#3B1F73,#4A1630);border-color:#8A4A9A}
+.bdg.got .e{filter:none}.bdg.got .bn{color:var(--ink)}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.f label{display:block;font-size:12.5px;color:var(--muted);margin-bottom:4px}
+.f input,.f select{width:100%;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:11px 10px}
+.chart svg{width:100%;height:auto;display:block;margin-top:8px}
+.fb{margin-top:8px;font-weight:600}
+
+/* Me */
+.tog{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.tog .lbl b{display:block}
+.tog .lbl span{font-size:13px;color:var(--muted)}
+.sw{width:54px;height:32px;border-radius:99px;background:var(--card2);border:1px solid var(--line);position:relative;flex:none}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:var(--muted);transition:left .2s}
+.sw.on{background:var(--sun);border:0}
+.sw.on::after{left:26px;background:#2A0E1E}
+textarea{width:100%;min-height:90px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px;margin-top:8px;font-size:12px}
+
+/* Nav */
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:20;background:rgba(18,9,36,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);padding-bottom:var(--bot)}
+.nav .in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr)}
+.nav button{padding:10px 0 12px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:12px;font-weight:700;color:var(--dim)}
+.nav svg{width:24px;height:24px}
+.nav button.on{color:var(--ink)}
+.nav button.on svg{stroke:url(#sunGrad)}
+
+/* Overlays */
+#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:50}
+.toast{position:fixed;left:50%;top:calc(var(--top) + 10px);transform:translate(-50%,-160%);z-index:60;background:#0E0820;border:1px solid var(--gold);color:var(--ink);border-radius:16px;padding:10px 16px;font-weight:700;box-shadow:0 10px 30px rgba(0,0,0,.5);transition:transform .35s cubic-bezier(.2,.9,.3,1.3),opacity .2s;max-width:90vw;text-align:center;opacity:0;visibility:hidden}
+.toast.show{transform:translate(-50%,0);opacity:1;visibility:visible}
+.floatxp{position:fixed;z-index:55;pointer-events:none;font-family:var(--display);font-size:18px;color:var(--gold);text-shadow:0 2px 10px rgba(0,0,0,.6);animation:floatup 1s ease-out forwards;white-space:nowrap}
+@keyframes floatup{from{opacity:1;transform:translate(-50%,0) scale(.8)}to{opacity:0;transform:translate(-50%,-70px) scale(1.2)}}
+.celebrate{position:fixed;inset:0;z-index:70;display:grid;place-items:center;background:rgba(10,4,24,.82);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);animation:fadein .25s}
+.celebrate .box{text-align:center;padding:24px;max-width:340px}
+.celebrate .big{font-family:var(--display);font-size:40px;line-height:1.05;background:var(--sun);-webkit-background-clip:text;background-clip:text;color:transparent;animation:zoom .6s cubic-bezier(.2,.9,.3,1.5)}
+.celebrate .emo{font-size:64px;animation:zoom .6s cubic-bezier(.2,.9,.3,1.5)}
+.celebrate p{color:var(--muted);margin:10px 0 18px}
+@keyframes fadein{from{opacity:0}}
+@keyframes zoom{from{transform:scale(.3);opacity:0}}
+
+/* Onboarding */
+.onb{padding-top:30px}
+.onb h1{font-family:var(--display);font-size:40px;line-height:1.05;margin:16px 0}
+.onb h1 span{background:var(--sun);-webkit-background-clip:text;background-clip:text;color:transparent}
+.onb p{color:var(--muted)}
+.onb .f{max-width:260px;margin-top:18px}
+.steps{display:flex;gap:6px;margin-top:6px}
+.steps i{height:6px;flex:1;border-radius:99px;background:var(--card2)}
+.steps i.on{background:var(--sun)}
+
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="sunGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF4D6D"/><stop offset=".5" stop-color="#FF8A3D"/><stop offset="1" stop-color="#FFC53D"/></linearGradient></defs></svg>
+<main class="wrap" id="app"></main>
+<nav class="nav" id="nav" hidden>
+  <div class="in">
+    <button data-tab="today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>Today</button>
+    <button data-tab="workout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 7v10M18 7v10M3 10v4M21 10v4M6 12h12"/></svg>Workout</button>
+    <button data-tab="fuel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3 4 6 6.5 6 10a6 6 0 01-12 0c0-3.5 3-6 6-10z"/></svg>Fuel</button>
+    <button data-tab="stats"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Stats</button>
+    <button data-tab="me"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>Me</button>
+  </div>
+</nav>
+<canvas id="fx"></canvas>
+<div class="toast" id="toast" role="status"></div>
+<div id="rest"></div>
+<div id="overlay"></div>
+
+<script src="capacitor.js"></script>
+<script>
+(function(){
+"use strict";
+
+/* ================= Storage ================= */
+const KEY = "ninety-days-v1";
+const DEF_SET = { notify:true, water:true, sound:true, haptics:true };
+const fresh = () => ({ startDate:null, logs:{}, settings:Object.assign({},DEF_SET), seen:[], onboarded:false });
+let S = fresh();
+function load(){
+  try{
+    const raw = localStorage.getItem(KEY);
+    if(raw){ const d = JSON.parse(raw); if(d && typeof d==="object"){ S = Object.assign(fresh(),d); S.settings = Object.assign({},DEF_SET,d.settings||{}); S.logs = d.logs||{}; S.seen = d.seen||[]; } }
+  }catch(e){}
+}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){ toast("Could not save. Storage may be full."); } }
+
+/* ================= Dates ================= */
+const pad = n => String(n).padStart(2,"0");
+const keyOf = d => d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const parseKey = k => { const p = k.split("-").map(Number); return new Date(p[0],p[1]-1,p[2]); };
+const addDays = (k,n) => { const d = parseKey(k); d.setDate(d.getDate()+n); return keyOf(d); };
+const diffDays = (a,b) => Math.round((parseKey(b)-parseKey(a))/86400000);
+function planToday(){ const n = new Date(); if(n.getHours() < 4) n.setDate(n.getDate()-1); return keyOf(n); }
+const fmtLong = k => parseKey(k).toLocaleDateString("en-IN",{weekday:"short",day:"numeric",month:"short"});
+const fmtShort = k => parseKey(k).toLocaleDateString("en-IN",{day:"numeric",month:"short"});
+const dayOf = k => diffDays(S.startDate,k)+1;
+const clampDay = d => Math.max(1,Math.min(90,d));
+const weekOf = d => Math.min(12,Math.ceil(clampDay(d)/7));
+const phaseOf = d => { d = clampDay(d); return d<=30?1:d<=60?2:3; };
+const keyForDay = d => addDays(S.startDate,d-1);
+const PHASE = {1:"Phase 1: build the habits",2:"Phase 2: push consistency",3:"Phase 3: sharpen and lock in"};
+function tmin(t){ const m = /(\d+):(\d+)\s*(am|pm)/.exec(t); let h = (+m[1])%12; if(m[3]==="pm") h+=12; let mins = h*60 + (+m[2]); if(m[3]==="am" && h<4) mins += 1440; return mins; }
+function taskDate(k,t){ const d = parseKey(k); d.setHours(0,tmin(t),0,0); return d; }
+
+const esc = s => String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const lg = k => (S.logs[k] = S.logs[k] || {});
+const pk = k => S.logs[k] || {};
+
+/* ================= Plan content ================= */
+const MEALS = {
+  b:["1 plate poha + 1 cup curd + small handful peanuts","3 idli + extra sambar + 1 glass milk or buttermilk","2 moong dal or besan chilla + curd","1 paneer paratha (less ghee) + curd","Misal without farsan + 1 pav","Upma + 1 glass milk"],
+  l:["2 roti + dal + sabji + curd + salad","1 katori rice + rajma or chole + salad","2 roti + paneer sabji + salad","Veg pulao (1 katori) + raita + soya or paneer side","1 roti + ½ katori rice + dal + sabji + curd"],
+  s:["30–40 g roasted chana + buttermilk","Fruit + small handful peanuts","Sprouts bhel without sev","Greek yoghurt cup","Roasted makhana","Plain corn cup (no butter)"],
+  d:["Dal khichdi (1 bowl) + curd + salad","Paneer bhurji + 2 roti + salad","2 roti + dal + sabji","Soya chunk curry + 1 roti + ½ katori rice","2 moong dal chilla + curd"]
+};
+const meal = (t,d) => MEALS[t][(clampDay(d)-1)%MEALS[t].length];
+
+const W = {
+  A:{name:"Full body A",list:[["leg-press-goblet","Leg press or goblet squat","3 × 10–12"],["chest-press","Machine chest press","3 × 10–12"],["lat-pulldown","Lat pulldown","3 × 10–12"],["cable-row","Seated cable row","3 × 10–12"],["rdl-light","Dumbbell Romanian deadlift (light)","2 × 10"],["plank","Plank","3 × 20–30 s"],["incline-walk","Incline treadmill walk","10–15 min"]]},
+  B:{name:"Full body B",list:[["leg-press","Leg press","3 × 12"],["pushups-incline","Incline or knee push-ups","3 × max good reps"],["db-row","One-arm dumbbell row","3 × 10 each side"],["shoulder-press-m","Machine shoulder press","2 × 10–12"],["glute-bridge","Glute bridge","3 × 12"],["dead-bug","Dead bug","3 × 8 each side"],["incline-walk","Incline treadmill walk","10–15 min"]]},
+  U:{name:"Upper body",list:[["chest-press","Dumbbell or machine chest press","3–4 × 8–12"],["lat-pulldown","Lat pulldown","3–4 × 8–12"],["cable-row","Seated cable row","3 × 10–12"],["db-shoulder-press","Dumbbell shoulder press","3 × 10"],["pushups","Push-ups","2 × max"],["arms","Biceps curl + triceps pushdown","2 × 12 each"]]},
+  L:{name:"Lower body",list:[["leg-press-goblet","Goblet squat or leg press","3–4 × 8–12"],["rdl","Dumbbell Romanian deadlift","3 × 10"],["lunges","Walking lunges or split squats","3 × 8 each leg"],["leg-curl","Leg curl machine","3 × 12"],["calf","Calf raises","3 × 15"],["core-side","Side plank + bird dog","3 × 20–30 s / 8 each"]]}
+};
+function gymFor(k,day){
+  const dow = parseKey(k).getDay(), wk = weekOf(day);
+  if(wk<=4){
+    if(dow!==1 && dow!==3 && dow!==5) return null;
+    let n = 0; const end = Math.min(clampDay(day),28);
+    for(let i=1;i<=end;i++){ const dw = parseKey(keyForDay(i)).getDay(); if(dw===1||dw===3||dw===5) n++; }
+    if(n===0) n=1;
+    return n%2===1 ? "A" : "B";
+  }
+  if(dow===1||dow===4) return "U";
+  if(dow===2||dow===5) return "L";
+  return null;
+}
+function workoutList(code,day){
+  const list = W[code].list.slice(), wk = weekOf(day);
+  if(code==="U"||code==="L"){
+    if(wk>=9) list.push(code==="U"?["pallof","Pallof press","3 × 10 each"]:["knee-raise","Hanging knee raises","3 × 10"]);
+    list.push(["cardio","Incline walk or cycle",wk>=9?"20 min":"15–20 min"]);
+  }
+  return list;
+}
+const setsOf = s => { const m = /^(\d+)(?:–(\d+))?\s*×/.exec(s); return m ? +(m[2]||m[1]) : 1; };
+function hairFor(k,day){
+  const dow = parseKey(k).getDay(), wk = weekOf(day);
+  if(wk<=4){ if(dow===1||dow===4) return "med"; if(dow===6) return "mild"; return null; }
+  if(dow===1) return "med"; if(dow===3||dow===6) return "mild"; return null;
+}
+function bedtime(wk){
+  if(wk<=2) return {phone:"12:15 am",lights:"1:00 am",wake:"8:00 am"};
+  if(wk<=4) return {phone:"12:00 am",lights:"12:45 am",wake:"8:00 am"};
+  if(wk<=8) return {phone:"11:45 pm",lights:"12:30 am",wake:"7:30 am"};
+  return {phone:"11:30 pm",lights:"12:15 am",wake:"7:30 am"};
+}
+const STEPS = [7000,7500,7500,8000,8000,8500,8500,9000,9000,9500,10000,10000];
+const proteinGoal = wk => wk<=4 ? [70,80] : [90,110];
+function amSkin(wk){
+  if(wk===1) return "Salicylic face wash, gel moisturiser, SPF 50 sunscreen.";
+  if(wk===2) return "Face wash, vitamin C serum (every second day this week if it stings), moisturiser, sunscreen.";
+  return "Face wash, vitamin C serum, moisturiser, SPF 50 sunscreen.";
+}
+function pmSkin(wk,day){
+  if(wk<=2) return "Face wash, gel moisturiser.";
+  if(wk<=4) return day%2===1 ? "Face wash, moisturiser, then benzoyl peroxide 2.5% on forehead and nose." : "Face wash, moisturiser. No benzoyl peroxide tonight.";
+  return "Face wash, moisturiser, benzoyl peroxide 2.5% on acne-prone areas.";
+}
+function alcoholRule(day){
+  const p = phaseOf(day);
+  if(p===1) return {n:2,t:"Max 2 nights this week, 90 ml each, soda or water as mixer. Never on gym nights."};
+  if(p===2) return {n:2,t:"1–2 nights this week, 60–90 ml each. Pick the night in advance."};
+  return {n:1,t:"0–1 night this week, 60–90 ml. An alcohol-free week earns a badge."};
+}
+const weekRange = d => { const w = Math.ceil(clampDay(d)/7), s = (w-1)*7+1; return [s,Math.min(90,s+6)]; };
+
+function buildDay(k){
+  const day = dayOf(k), d = clampDay(day), wk = weekOf(d);
+  const dow = parseKey(k).getDay(), weekend = dow===0||dow===6;
+  const bt = bedtime(wk), gym = gymFor(k,d), hair = hairFor(k,d);
+  const supp = wk>=2 ? " Then multivitamin, B12 and vitamin D3." : "";
+  const isab = wk<=2 ? "1 tsp" : "2 tsp";
+  const items = [];
+  const add = (id,t,title,det,o) => items.push(Object.assign({id,t,title,det,xp:10},o||{}));
+  if(!weekend){
+    add("wake",bt.wake,"Wake up + 400–500 ml water","5 minutes of daylight within 15 minutes.");
+    add("am",wk<=4?"8:15 am":"7:45 am","Shower + morning skincare",amSkin(wk));
+    if(wk>=5) add("mwalk","8:30 am","15–20 min brisk walk","About 2,000 bonus steps.",{opt:true});
+    add("bf","9:00 am","Protein breakfast",meal("b",d)+"."+supp);
+    add("water","10:00 am","Finish 1 L water by lunch","Stand and move 2–3 minutes every hour.");
+    add("lunch","2:00 pm","Lunch, plate method",meal("l",d)+". Protein first, then veg, then carbs.");
+    add("lwalk","2:30 pm","10-minute walk after lunch","Beats the post-lunch slump.");
+    add("snack","5:30 pm","Planned evening snack",meal("s",d)+". Skip the vada pav.");
+    add("home","7:00 pm","Home: gym clothes on","Do not lie down first.");
+    if(gym){
+      add("gym","7:30 pm","Boss fight: "+W[gym].name,"Open the Workout tab. Rest 60–90 s between sets.",{xp:30,boss:true});
+      add("shake","8:30 pm","Protein shake","1 scoop, about 20–25 g protein.");
+    } else {
+      add("ewalk","7:30 pm","30-minute brisk walk","No gym today, keep moving.");
+      add("shake","8:15 pm","Protein shake","1 scoop, about 20–25 g protein. Daily, not only gym days.");
+    }
+    add("isab","8:45 pm","Isabgol: "+isab+" in a full glass of water","Drink extra water through the evening.");
+    add("dinner","9:00 pm","Dinner, done by 9:30 pm",meal("d",d)+".");
+  } else {
+    add("wake",wk<=4?"8:30 am":"8:00 am","Wake up + 400–500 ml water","Within 1 hour of your weekday time. Get daylight.");
+    if(dow===6) add("lwalk-sat","9:00 am",wk>=9?"Walk-jog intervals (35–40 min)":"Long brisk walk, 40–60 min",wk>=9?"5 min walk, then 1 min easy jog + 2 min walk × 6–8, then 5 min walk.":"Your biggest step day. Outdoors if you can.",{xp:20});
+    else add("swalk","9:00 am","Easy 20–30 min walk","Sunday is recovery. Optional.",{opt:true});
+    add("bf","10:00 am","Protein breakfast",meal("b",d)+"."+supp);
+    add("am","10:30 am","Morning skincare",amSkin(wk)+" Sunscreen if you go out.");
+    if(dow===0) add("plan","11:30 am","Plan the week","Tiffin, curd, fruit, chana. Pick your one social night.");
+    add("lunch","2:00 pm","Lunch, plate method",meal("l",d)+".");
+    add("snack","5:30 pm","Planned evening snack",meal("s",d)+".");
+    add("shake","6:00 pm","Protein shake","1 scoop, about 20–25 g protein.");
+    add("isab","8:45 pm","Isabgol: "+isab+" in a full glass of water","Drink extra water through the evening.");
+    add("dinner","9:00 pm","Dinner, done by 9:30 pm",meal("d",d)+". Going out? Eat protein first.");
+    if(dow===0) add("checkin","9:45 pm","Weekly check-in","Measure waist at the navel, log it in Stats.",{xp:20});
+  }
+  if(hair) add("hair","10:30 pm",hair==="med"?"Hair wash: medicated shampoo":"Hair wash: mild shampoo",hair==="med"?"Lather into the scalp, leave 3–5 minutes, rinse.":"Your regular mild shampoo. Dry fully before bed.");
+  add("pm","11:00 pm","Evening skincare",pmSkin(wk,d));
+  add("phone",bt.phone,"Phone away from the bed","Dim lights. Read, stretch or listen to audio.");
+  add("sleep",bt.lights,"Lights out","Wake target "+bt.wake+".",{xp:15});
+  items.sort((a,b)=>tmin(a.t)-tmin(b.t));
+  return {day,d,wk,ph:phaseOf(d),gym,hair,bt,items,weekend,dow};
+}
+function completion(k){
+  const p = buildDay(k), c = pk(k).c || {};
+  const req = p.items.filter(i=>!i.opt), done = req.filter(i=>c[i.id]).length;
+  return {done,total:req.length,p:req.length?done/req.length:0};
+}
+
+/* ================= XP, levels, streaks, badges ================= */
+function xpOfLog(l){ let s = 0; if(l && l.xp) for(const v of Object.values(l.xp)) s += (+v||0); return s; }
+function totalXP(){ let s = 0; for(const k in S.logs) s += xpOfLog(S.logs[k]); return s; }
+const levelOf = xp => Math.floor((1+Math.sqrt(1+xp*0.08))/2);
+const xpForLevel = n => 50*n*(n-1);
+const TITLES = [[1,"Rookie"],[3,"Mover"],[5,"Grinder"],[8,"Warrior"],[11,"Beast"],[15,"Machine"],[19,"Legend"],[24,"Unstoppable"]];
+const titleOf = lv => { let t = TITLES[0][1]; for(const [n,name] of TITLES) if(lv>=n) t = name; return t; };
+function award(k,key,amt){ const l = lg(k); l.xp = l.xp||{}; if(amt>0) l.xp[key]=amt; else delete l.xp[key]; }
+
+function streaks(){
+  if(!S.startDate) return {cur:0,best:0};
+  const lastDay = Math.min(90,dayOf(planToday()));
+  const ok = d => { const l = S.logs[keyForDay(d)]; return !!(l && l.p >= 0.7); };
+  let best = 0, run = 0;
+  for(let d=1; d<=lastDay; d++){ if(ok(d)){ run++; best = Math.max(best,run); } else run = 0; }
+  let cur = 0, d = lastDay;
+  if(d>=1 && !ok(d)) d--;
+  while(d>=1 && ok(d)){ cur++; d--; }
+  return {cur,best};
+}
+function weekStats(){
+  const rows = [];
+  for(let w=1; w<=13; w++){
+    const s = (w-1)*7+1; if(s>90) break; const e = Math.min(90,s+6);
+    const wt=[],st=[],sl=[],cp=[]; let wa=null,al=0,gym=0,any=false;
+    for(let i=s;i<=e;i++){
+      const l = S.logs[keyForDay(i)]; if(!l) continue;
+      if(l.w){wt.push(+l.w);any=true} if(l.st){st.push(+l.st);any=true} if(l.sl){sl.push(+l.sl);any=true}
+      if(l.wa){wa=+l.wa;any=true} if(+l.al>0){al++;any=true} if(l.c&&l.c.gym){gym++;any=true} if(l.p!=null){cp.push(l.p);any=true}
+    }
+    const avg = a => a.length ? a.reduce((x,y)=>x+y,0)/a.length : null;
+    rows.push({w,any,wt:avg(wt),st:avg(st),sl:avg(sl),wa,al,gym,cp:avg(cp)});
+  }
+  return rows;
+}
+function badgeList(){
+  const logs = Object.keys(S.logs).sort().map(k=>[k,S.logs[k]]);
+  const count = f => logs.filter(([k,l])=>f(l,k)).length;
+  const st = streaks();
+  const gym = count(l=>l.c&&l.c.gym), perfect = count(l=>l.xp&&l.xp.perfect);
+  const water = count(l=>(+l.wt||0)>=12), protein = count(l=>l.xp&&l.xp.pt), sleep = count(l=>l.c&&l.c.sleep), boss = count(l=>l.xp&&l.xp.boss);
+  const w = weekStats().filter(r=>r.wt!=null);
+  let firstW = null; for(const [,l] of logs){ if(l.w){ firstW = +l.w; break; } }
+  const lastAvg = w.length ? w[w.length-1].wt : null;
+  const lost = firstW!=null && lastAvg!=null ? firstW-lastAvg : 0;
+  let dryWeek = false;
+  if(S.startDate){ for(let wk=1; wk<=12 && !dryWeek; wk++){ let ok = true; for(let i=(wk-1)*7+1;i<=wk*7;i++){ const l = S.logs[keyForDay(i)]; if(!l || l.al===undefined || +l.al>0){ ok=false; break; } } if(ok) dryWeek = true; } }
+  let smoke3=false, smoke7=false, run=0;
+  for(const [,l] of logs){ if(l.cg!==undefined && +l.cg===0){ run++; if(run>=3) smoke3=true; if(run>=7) smoke7=true; } else if(l.cg!==undefined) run=0; }
+  const today = S.startDate ? dayOf(planToday()) : 0;
+  return [
+    ["first","⚡","First move","Complete your first task",count(l=>l.c&&Object.keys(l.c).length)>0],
+    ["s3","🔥","On fire","3-day streak (70%+ of tasks)",st.best>=3],
+    ["s7","🔥","Week warrior","7-day streak",st.best>=7],
+    ["s14","☄️","Two-week tear","14-day streak",st.best>=14],
+    ["s30","🌋","Unbreakable","30-day streak",st.best>=30],
+    ["g1","🏋️","First boss","First gym session",gym>=1],
+    ["g10","💪","Iron regular","10 gym sessions",gym>=10],
+    ["g25","🦾","Gym machine","25 gym sessions",gym>=25],
+    ["boss5","⚔️","Boss slayer","Finish every set of a session 5 times",boss>=5],
+    ["p1","🌟","Perfect day","Every task done in one day",perfect>=1],
+    ["p5","✨","Perfectionist","5 perfect days",perfect>=5],
+    ["p15","👑","Royal run","15 perfect days",perfect>=15],
+    ["h7","💧","Hydro hero","3 L water on 7 days",water>=7],
+    ["pr7","🥛","Protein pro","Hit your protein target on 7 days",protein>=7],
+    ["sl7","🌙","Night owl tamed","Lights out on time 7 times",sleep>=7],
+    ["dry","🧊","Dry week","A full plan week with 0 alcohol logged every day",dryWeek],
+    ["sm3","🚭","Smoke-free 3","3 days in a row at 0 cigarettes",smoke3],
+    ["sm7","🫁","Smoke-free 7","7 days in a row at 0 cigarettes",smoke7],
+    ["kg1","📉","First kilo","1 kg down (weekly average)",lost>=1],
+    ["kg3","🎯","Three down","3 kg down",lost>=3],
+    ["kg5","🏆","Five down","5 kg down",lost>=5],
+    ["d30","🥉","Day 30","Reach Day 30",today>=30],
+    ["d60","🥈","Day 60","Reach Day 60",today>=60],
+    ["d90","🥇","Day 90","Finish the 90 days",today>=90]
+  ].map(([id,e,n,desc,got])=>({id,e,n,desc,got}));
+}
+
+/* ================= FX: sound, haptics, confetti, toast ================= */
+let actx = null;
+function tone(freqs,dur,type,gainV){
+  if(!S.settings.sound) return;
+  try{
+    actx = actx || new (window.AudioContext||window.webkitAudioContext)();
+    if(actx.state==="suspended") actx.resume();
+    const t0 = actx.currentTime;
+    freqs.forEach((f,i)=>{
+      const o = actx.createOscillator(), g = actx.createGain();
+      o.type = type||"triangle"; o.frequency.value = f;
+      const st = t0 + i*0.07, du = dur||0.25;
+      g.gain.setValueAtTime(0.0001,st); g.gain.exponentialRampToValueAtTime(gainV||0.18,st+0.01); g.gain.exponentialRampToValueAtTime(0.0001,st+du);
+      o.connect(g); g.connect(actx.destination); o.start(st); o.stop(st+du+0.02);
+    });
+  }catch(e){}
+}
+let combo = 0, comboT = 0;
+function sndCheck(){ const now = Date.now(); combo = (now-comboT < 120000) ? Math.min(combo+1,8) : 0; comboT = now; const b = 660*Math.pow(1.06,combo); tone([b,b*1.26],0.22); }
+const sndBig = () => tone([523,659,784,1046,1318],0.5,"triangle",0.2);
+const sndRest = () => tone([880,880,1175],0.3,"square",0.08);
+function buzz(p){ if(!S.settings.haptics) return; try{ if(navigator.vibrate) navigator.vibrate(p||18); }catch(e){} }
+
+const fx = document.getElementById("fx"), ctx = fx.getContext("2d");
+let parts = [], raf = 0;
+const reduced = !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+function sizeFx(){ fx.width = innerWidth*devicePixelRatio; fx.height = innerHeight*devicePixelRatio; }
+sizeFx(); addEventListener("resize",sizeFx);
+const COLS = ["#FF4D6D","#FF8A3D","#FFC53D","#43F3B0","#6EC8FF","#FFF6EE"];
+function burst(x,y,n,spread){
+  if(reduced) return;
+  const dpr = devicePixelRatio;
+  for(let i=0;i<n;i++){
+    const a = Math.random()*Math.PI*2, v = (spread||6)*(0.4+Math.random());
+    parts.push({x:x*dpr,y:y*dpr,vx:Math.cos(a)*v*dpr,vy:(Math.sin(a)*v-4)*dpr,g:0.25*dpr,s:(4+Math.random()*5)*dpr,r:Math.random()*6,vr:(Math.random()-.5)*0.4,c:COLS[i%COLS.length],life:60+Math.random()*40});
+  }
+  if(!raf) raf = requestAnimationFrame(tick);
+}
+function rain(){ for(let i=0;i<6;i++) setTimeout(()=>burst(Math.random()*innerWidth,-10,30,5),i*120); }
+function tick(){
+  ctx.clearRect(0,0,fx.width,fx.height);
+  parts = parts.filter(p=>p.life>0);
+  for(const p of parts){
+    p.vy += p.g; p.x += p.vx; p.y += p.vy; p.vx *= 0.99; p.r += p.vr; p.life--;
+    ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.r); ctx.globalAlpha = Math.min(1,p.life/30);
+    ctx.fillStyle = p.c; ctx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2); ctx.restore();
+  }
+  raf = parts.length ? requestAnimationFrame(tick) : 0;
+  if(!raf) ctx.clearRect(0,0,fx.width,fx.height);
+}
+function floatXP(x,y,txt){ const el = document.createElement("div"); el.className="floatxp"; el.textContent = txt; el.style.left = x+"px"; el.style.top = (y-20)+"px"; document.body.appendChild(el); setTimeout(()=>el.remove(),1000); }
+let toastT = 0;
+function toast(msg){ const t = document.getElementById("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(()=>t.classList.remove("show"),2600); }
+function celebrate(emo,big,sub){
+  const o = document.getElementById("overlay");
+  o.innerHTML = '<div class="celebrate" data-act="closecel"><div class="box"><div class="emo">'+emo+'</div><div class="big">'+esc(big)+'</div><p>'+esc(sub)+'</p><button class="btn" data-act="closecel">Let\'s go</button></div></div>';
+  sndBig(); buzz([30,60,30,60,80]); rain();
+}
+
+const HYPE = ["Small wins stack into big change.","You don't need motivation. You need the next task.","Every tick is a vote for the new you.","Show up. That's the whole trick.","One good day at a time. That's how 90 happens.","The streak is the goal. Results follow.","Future you is watching. Make him proud.","Discipline today, freedom later."];
+
+/* ================= Rendering ================= */
+const app = document.getElementById("app"), nav = document.getElementById("nav");
+const ui = { tab:"today", view:null, pickW:null, onbStep:1, confirmReset:false, lastPop:null };
+
+function render(){
+  if(!S.startDate || !S.onboarded){ nav.hidden = true; app.innerHTML = onboarding(); return; }
+  nav.hidden = false;
+  if(!ui.view) ui.view = planToday();
+  nav.querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.tab===ui.tab));
+  let h = hud();
+  if(ui.tab==="today") h += today();
+  else if(ui.tab==="workout") h += workout();
+  else if(ui.tab==="fuel") h += fuel();
+  else if(ui.tab==="stats") h += stats();
+  else h += me();
+  app.innerHTML = h;
+  if(ui.tab==="stats") drawChart();
+  if(ui.lastPop){ const el = app.querySelector('[data-q="'+ui.lastPop+'"]'); if(el) el.classList.add("pop"); ui.lastPop = null; }
+}
+function rerender(){ const y = scrollY; render(); scrollTo(0,y); }
+
+function hud(){
+  const xp = totalXP(), lv = levelOf(xp), base = xpForLevel(lv), next = xpForLevel(lv+1);
+  const pct = Math.round((xp-base)/(next-base)*100), st = streaks();
+  return '<div class="hud"><div class="lv"><div><b>'+lv+'</b><small>LEVEL</small></div></div>'+
+    '<div class="xpbox"><div class="row1"><strong>'+esc(titleOf(lv))+'</strong><span>'+(xp-base)+' / '+(next-base)+' XP</span></div><div class="bar"><i style="width:'+pct+'%"></i></div></div>'+
+    '<div class="streak'+(st.cur>=3?" hot":"")+'" aria-label="Day streak '+st.cur+'"><span class="flame">🔥</span>'+st.cur+'</div></div>'+
+    (ui.tab!=="me" ? datebar() : "");
+}
+function datebar(){
+  const k = ui.view, t = planToday();
+  return '<div class="datebar"><button class="chipbtn" data-act="prev" aria-label="Previous day">‹</button><span class="d">'+esc(fmtLong(k))+'</span>'+
+    (k!==t?'<button class="chipbtn sun" data-act="today">Today</button>':'')+'<button class="chipbtn" data-act="next" aria-label="Next day">›</button></div>';
+}
+
+function onTimeWindow(k,it){ if(k!==planToday()) return false; const d = Date.now()-taskDate(k,it.t).getTime(); return d >= -45*60000 && d <= 60*60000; }
+function nextTask(k,plan){
+  if(k!==planToday()) return null;
+  const c = pk(k).c||{}, now = Date.now();
+  const open = plan.items.filter(i=>!c[i.id]);
+  if(!open.length) return {done:true};
+  const due = open.find(i=>taskDate(k,i.t).getTime() >= now-90*60000) || open[open.length-1];
+  const diff = Math.round((taskDate(k,due.t).getTime()-now)/60000);
+  let when;
+  if(diff>90) when = "at "+due.t; else if(diff>0) when = "in "+diff+" min"; else if(diff>-15) when = "now"; else when = "overdue by "+(-diff)+" min";
+  return {item:due,when};
+}
+function milestone(day){
+  const m = {
+    1:["Day 1 setup",["Weigh in and measure your waist at the navel.","Take face and hair photos (front, sides, hairline, crown).","Join the gym, book a tiffin, buy skincare and supplements."]],
+    7:["End of Week 1",["Expect 0.5–1.5 kg down, mostly water.","Pick a smoking quit date within 3 weeks.","Book your GP visit (BP, snoring, blood tests if you can)."]],
+    30:["Day 30 checkpoint",["Take Day 30 photos and compare with Day 1.","Realistic: 2–4 kg down, 2–4 cm off the waist.","From tomorrow: 4 gym days and protein 90+ g."]],
+    60:["Day 60 checkpoint",["Take Day 60 photos.","Realistic: 4–6 kg down in total.","Skin not clearly better, or thinning in photos? Book a dermatologist."]],
+    90:["Day 90 review",["Compare Day 1 and Day 90 photos, weight and waist.","Realistic: 5–8 kg down.","Set your next target (for example 72–74 kg by month 6)."]]
+  }[day];
+  return m ? '<div class="banner"><h3>'+m[0]+'</h3><ul>'+m[1].map(x=>'<li>'+esc(x)+'</li>').join("")+'</ul></div>' : "";
+}
+function alcoholNights(d){ const r = weekRange(d); let n = 0; for(let i=r[0];i<=r[1];i++){ const l = S.logs[keyForDay(i)]; if(l && +l.al>0) n++; } return n; }
+
+function today(){
+  const k = ui.view, plan = buildDay(k), c = pk(k).c||{}, comp = completion(k);
+  const R = 56, C = 2*Math.PI*R, off = C*(1-comp.p);
+  const dayLbl = plan.day<1 ? "Starts "+fmtShort(S.startDate) : plan.day>90 ? "Bonus round" : PHASE[plan.ph];
+  let h = '<section class="hero"><div class="ring"><svg viewBox="0 0 132 132"><circle cx="66" cy="66" r="'+R+'" stroke="#2F2160" stroke-width="12" fill="none"/>'+
+    '<circle cx="66" cy="66" r="'+R+'" stroke="url(#sunGrad)" stroke-width="12" fill="none" stroke-linecap="round" stroke-dasharray="'+C.toFixed(1)+'" stroke-dashoffset="'+off.toFixed(1)+'" style="transition:stroke-dashoffset .6s"/></svg>'+
+    '<div class="c"><div><b>'+Math.round(comp.p*100)+'%</b><span>'+comp.done+' of '+comp.total+'</span></div></div></div>'+
+    '<div><h1>Day '+Math.max(1,plan.day)+'<span style="color:var(--dim);font-size:16px"> / 90</span></h1><div class="ph">'+esc(dayLbl)+', week '+plan.wk+'</div>'+
+    '<div class="today-xp">⚡ '+xpOfLog(pk(k))+' XP today</div></div></section>';
+  const nx = nextTask(k,plan);
+  if(nx && nx.done) h += '<div class="next clear"><div><div class="lbl">All clear</div><div class="t">Every quest done. Legend.</div></div><div style="font-size:34px">🏆</div></div>';
+  else if(nx) h += '<div class="next"><div><div class="lbl">Next up, '+esc(nx.when)+'</div><div class="t">'+esc(nx.item.title)+'</div><div class="when">+'+nx.item.xp+' XP'+(onTimeWindow(k,nx.item)?', +5 on-time bonus':'')+'</div></div><button data-act="done" data-id="'+nx.item.id+'">Done</button></div>';
+  h += '<p class="quote">'+esc(HYPE[(clampDay(plan.day)-1)%HYPE.length])+'</p>';
+  if(plan.day>=1 && plan.day<=90) h += milestone(plan.day);
+  const g = proteinGoal(plan.wk);
+  h += '<div class="stats3"><div class="stat"><b>'+(STEPS[plan.wk-1]/1000)+'k</b><span>steps</span></div><div class="stat"><b>'+g[0]+'+ g</b><span>protein</span></div><div class="stat"><b>'+plan.bt.lights.replace(/ (am|pm)/,"")+'</b><span>lights out</span></div></div>';
+  h += '<section class="sec"><h2>Quests <small>tap the box when done</small></h2>';
+  const now = Date.now(), isToday = k===planToday();
+  for(const it of plan.items){
+    const on = !!c[it.id];
+    const late = isToday && !on && now - taskDate(k,it.t).getTime() > 60*60000;
+    h += '<div class="q'+(on?" done":"")+'" data-q="'+it.id+'"><div class="tm">'+it.t.replace(/ (am|pm)/,"")+'<small>'+it.t.slice(-2)+'</small></div>'+
+      '<div><div class="tt">'+esc(it.title)+'</div><div class="dt">'+esc(it.det)+'</div><div class="tags"><span class="pill xp">+'+it.xp+' XP</span>'+
+      (it.boss?'<span class="pill boss">boss</span>':'')+(it.opt?'<span class="pill opt">bonus</span>':'')+(late?'<span class="pill late">late</span>':'')+'</div></div>'+
+      '<button class="chk" data-act="toggle" data-id="'+it.id+'" aria-label="Mark '+esc(it.title)+' done" aria-pressed="'+on+'"><svg viewBox="0 0 24 24" fill="none" stroke="#2A0E1E" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button></div>';
+  }
+  h += '</section>';
+  const ar = alcoholRule(plan.d), used = alcoholNights(plan.d);
+  h += '<section class="sec rules"><h2>House rules this week</h2>'+
+    '<div class="r'+(used>ar.n?" warn":"")+'"><b>Alcohol.</b> '+esc(ar.t)+' Logged: '+used+(used===1?" night":" nights")+'.</div>'+
+    '<div class="r"><b>Food.</b> About 1,800–2,000 kcal. Half plate veg, a quarter protein, a quarter roti or rice.</div>'+
+    '<div class="r"><b>Supplements.</b> '+(plan.wk>=2?'Protein powder, isabgol, multivitamin, B12, vitamin D3.':'Week 1: protein powder and isabgol only.')+'</div></section>';
+  return h;
+}
+
+function lastEx(id,before){ const ks = Object.keys(S.logs).filter(k=>k<before && S.logs[k].x && S.logs[k].x[id]).sort(); return ks.length ? {k:ks[ks.length-1],v:S.logs[ks[ks.length-1]].x[id]} : null; }
+function curCode(plan){ return ui.pickW || plan.gym || (plan.wk<=4?"A":"U"); }
+function workout(){
+  const k = ui.view, plan = buildDay(k), wk = plan.wk, code = curCode(plan);
+  const list = workoutList(code,plan.d), l = pk(k), sets = l.sets||{};
+  let total = 0, done = 0;
+  for(const e of list){ const n = setsOf(e[2]); total += n; done += Math.min(n,sets[e[0]]||0); }
+  const dead = done>=total;
+  let h = '<div class="boss'+(dead?" dead":"")+'"><div class="top"><div><div style="color:#FFB3C1;font-size:13px;font-weight:700">'+(plan.gym===code?"Today's boss":"Practice session")+'</div><h2>'+esc(W[code].name)+'</h2></div><div style="font-size:40px">'+(dead?"🏆":"👹")+'</div></div>'+
+    '<div class="hp"><i style="width:'+Math.round((1-done/total)*100)+'%"></i></div><div class="hpt"><span>Boss HP: '+(total-done)+' of '+total+' sets left</span><span>'+(dead?"Defeated, +50 XP":"+2 XP per set")+'</span></div></div>';
+  if(!plan.gym){
+    h += '<div class="card"><h2>'+(plan.dow===6?"Saturday walk":plan.dow===0?"Rest day":"No gym today")+'</h2><p class="muted">'+
+      (plan.dow===6?(wk>=9?"Walk-jog: 5 min walk, then 1 min easy jog + 2 min walk × 6–8 rounds, then 5 min walk.":"Long brisk walk, 40–60 minutes."):plan.dow===0?"Sunday is recovery. An easy 20–30 minute walk is fine.":"30-minute brisk walk tonight. You can still practise a session below.")+'</p></div>';
+  }
+  const opts = wk<=4 ? ["A","B"] : ["U","L"];
+  h += '<div class="seg">'+opts.map(o=>'<button data-act="pickw" data-w="'+o+'" class="'+(o===code?"on":"")+'">'+W[o].name+'</button>').join("")+'</div>';
+  if(wk>=9) h += '<p class="muted" style="margin-top:10px">Weeks 9–12: go for the heavier end (8–10 reps) on the first two exercises.</p>';
+  h += '<p class="muted" style="margin-top:10px">Tap a box after each set. A 90-second rest timer starts automatically.</p>';
+  const x = l.x||{};
+  for(const e of list){
+    const n = setsOf(e[2]), dn = sets[e[0]]||0, last = lastEx(e[0],k);
+    const ph = /min/.test(e[2]) ? "e.g. 15 min, incline 8" : / s\b/.test(e[2]) ? "e.g. 30 s, 30 s, 25 s" : "e.g. 20 kg × 12, 12, 10";
+    h += '<div class="ex"><div class="h"><span class="n">'+esc(e[1])+'</span><span class="s">'+esc(e[2])+'</span></div><div class="dots">';
+    for(let i=0;i<n;i++) h += '<button class="dot'+(i<dn?" on":"")+'" data-act="set" data-ex="'+e[0]+'" data-i="'+i+'" data-n="'+n+'" aria-label="Set '+(i+1)+'">'+(i<dn?"✓":(i+1))+'</button>';
+    h += '</div><input type="text" data-exlog="'+e[0]+'" value="'+esc(x[e[0]]||"")+'" placeholder="'+ph+'" aria-label="Log for '+esc(e[1])+'">'+
+      (last?'<div class="last">Last time ('+esc(fmtShort(last.k))+'): '+esc(last.v)+'. Beat it by 1 rep.</div>':'')+'</div>';
+  }
+  h += '<div class="card"><h2>Level-up rules</h2>'+det("How to progress",["Pick a weight where the last 2 reps are hard but your form stays clean.","Hit the top of the rep range on every set? Add the smallest weight step next time.","Missed a week? Restart at about 80% of your last weights."].concat(wk===8?["Week 8: feeling run down? Do 2 sets per exercise this week."]:[]).concat(["Belly fat can't be spot-reduced. Core work builds the muscle; overall fat loss reveals it.","Sharp or joint pain: stop that exercise. Normal soreness lasts 1–3 days."]),true)+'</div>';
+  return h;
+}
+
+const FOODS = [["shake","Protein shake",24],["paneer","Paneer 100 g",18],["soya","Soya chunks 30 g",15],["greek","Greek yoghurt cup",10],["milk","Milk 1 glass",8],["chana","Chana/rajma katori",8],["dal","Dal 1 katori",7],["peanut","Peanuts 30 g",7],["rchana","Roasted chana 30 g",6],["sprouts","Sprouts 1 cup",6],["idli","3 idli + sambar",6],["poha","Poha 1 plate",5],["curd","Curd 1 katori",4],["roti","Roti 1",3],["butter","Buttermilk glass",2]];
+const proteinOf = l => (l.pl||[]).reduce((s,id)=>{ const f = FOODS.find(x=>x[0]===id); return s+(f?f[2]:0); },0);
+const det = (t,arr,open) => '<details'+(open?' open':'')+'><summary>'+esc(t)+'</summary><ul>'+arr.map(x=>'<li>'+esc(x)+'</li>').join("")+'</ul></details>';
+function fuel(){
+  const k = ui.view, plan = buildDay(k), l = pk(k), g = proteinGoal(plan.wk), p = proteinOf(l), wt = +l.wt||0;
+  const pctP = Math.min(100,Math.round(p/g[1]*100)), goalPos = Math.round(g[0]/g[1]*100);
+  let h = '<div class="card meter"><h2>Protein meter</h2><div class="big">'+p+' g <small>of '+g[0]+'–'+g[1]+' g today</small></div>'+
+    '<div class="mbar"><i style="width:'+pctP+'%"></i><span class="goal" style="left:'+goalPos+'%"></span></div>'+
+    '<div class="muted" style="margin-top:6px">'+(p>=g[0]?"Target hit. +20 XP banked 💥":"Tap what you ate. "+(g[0]-p)+" g to go. Amounts are approximate.")+'</div>'+
+    '<div class="foods">'+FOODS.map(f=>'<button data-act="food" data-f="'+f[0]+'">'+esc(f[1])+' <b>+'+f[2]+'</b></button>').join("")+'</div>'+
+    ((l.pl||[]).length?'<div class="row"><button class="btn ghost" data-act="foodundo">Undo last</button></div>':'')+'</div>';
+  h += '<div class="card"><h2>Water</h2><div class="muted">'+(wt*0.25).toFixed(2).replace(/\.?0+$/,"")+' L of 3 L. Tap a glass (250 ml each).</div><div class="glasses">';
+  for(let i=0;i<12;i++) h += '<button class="glass'+(i<wt?" on":"")+'" data-act="glass" data-i="'+i+'" aria-label="Glass '+(i+1)+'"><i></i></button>';
+  h += '</div>'+(wt>=12?'<div class="muted" style="margin-top:8px">3 L done. +15 XP 💧</div>':'')+'</div>';
+  h += '<div class="card picks"><h2>Today\'s menu</h2><div class="p"><span>Breakfast</span><div>'+esc(meal("b",plan.d))+'</div></div><div class="p"><span>Lunch</span><div>'+esc(meal("l",plan.d))+'</div></div>'+
+    '<div class="p"><span>Snack</span><div>'+esc(meal("s",plan.d))+'</div></div><div class="p"><span>Shake</span><div>1 scoop in water or milk</div></div><div class="p"><span>Dinner</span><div>'+esc(meal("d",plan.d))+'</div></div></div>';
+  h += '<div class="card"><h2>Plate method</h2><div class="tbl"><table><tr><th>Share</th><th>What</th><th>Hand</th></tr>'+
+    '<tr><td>Half</td><td>Sabji, salad, raita</td><td>2 fists</td></tr><tr><td>Quarter</td><td>Dal, paneer, chana, rajma, soya, curd</td><td>1–2 palms</td></tr>'+
+    '<tr><td>Quarter</td><td>2 roti, or 1 roti + ½ katori rice, or 1 katori rice</td><td>1 fist</td></tr><tr><td>Small</td><td>Ghee, oil, nuts</td><td>1 thumb</td></tr></table></div>'+
+    '<p class="muted">No greens? Lauki, tondli, bhindi, cabbage, cauliflower, beans, capsicum and carrots all count.</p></div>';
+  h += '<div class="card"><h2>Swaps and options</h2>'+det("Breakfast options",MEALS.b)+det("Lunch options",MEALS.l)+det("Snack options",MEALS.s)+det("Dinner options",MEALS.d)+
+    det("Eating out: choose",["Tandoori roti, dal tadka, paneer tikka, chana masala, salad","Street food: sprouts bhel, plain corn, idli, misal without farsan","With drinks: paneer tikka, roasted chana, salad; soda or water as mixer","Salty craving at night: roasted makhana, buttermilk, cucumber with chaat masala"])+
+    det("Eating out: limit",["Butter naan, dal makhani, creamy gravies","Vada pav, samosa, bhaji, sev puri","Fried chakna, chips, masala peanuts, cola or sweet mixers"])+'</div>';
+  return h;
+}
+
+function numF(key,label,attrs,v){ return '<div class="f"><label for="f-'+key+'">'+label+'</label><input id="f-'+key+'" type="number" inputmode="decimal" data-f="'+key+'" '+attrs+' value="'+(v==null?"":esc(v))+'"></div>'; }
+function selF(key,label,max,v){ let o = '<option value="">–</option>'; for(let i=1;i<=max;i++) o += '<option'+(String(v)===String(i)?" selected":"")+'>'+i+'</option>'; return '<div class="f"><label for="f-'+key+'">'+label+'</label><select id="f-'+key+'" data-f="'+key+'">'+o+'</select></div>'; }
+const f1 = v => v==null ? "–" : (Math.round(v*10)/10).toFixed(1);
+function stats(){
+  const k = ui.view, l = pk(k), xp = totalXP(), st = streaks(), bl = badgeList(), got = bl.filter(b=>b.got).length;
+  let h = '<div class="stats3"><div class="stat"><b>'+xp.toLocaleString("en-IN")+'</b><span>total XP</span></div><div class="stat"><b>'+st.best+'</b><span>best streak</span></div><div class="stat"><b>'+got+'/'+bl.length+'</b><span>badges</span></div></div>';
+  h += '<div class="card"><h2>Log for '+esc(fmtShort(k))+'</h2><p class="muted">Weigh in the morning, after the toilet, before food. +3 XP per field. Skin and dandruff: 1 = bad, 5 = clear.</p><div class="form">'+
+    numF("w","Weight (kg)",'step="0.1" min="30" max="200"',l.w)+numF("st","Steps",'step="100" min="0" max="60000"',l.st)+
+    numF("sl","Sleep (hours)",'step="0.25" min="0" max="16"',l.sl)+numF("al","Alcohol (ml, 0 if none)",'step="10" min="0" max="2000"',l.al)+
+    numF("cg","Cigarettes",'step="1" min="0" max="60"',l.cg)+numF("wa","Waist (cm)",'step="0.5" min="40" max="200"',l.wa)+
+    selF("sk","Skin (1–5)",5,l.sk)+selF("df","Dandruff (1–5)",5,l.df)+selF("en","Energy (1–5)",5,l.en)+selF("sr","Stress (1–10)",10,l.sr)+'</div></div>';
+  const rows = weekStats(), have = rows.filter(r=>r.any);
+  h += '<div class="card"><h2>Trend</h2>';
+  if(!have.some(r=>r.wt!=null)) h += '<p class="muted">Log your weight a few mornings and your weekly trend appears here.</p>';
+  else h += '<div class="chart" id="chart"></div><div class="fb">'+esc(feedback(rows))+'</div>';
+  if(have.length){
+    h += '<div class="tbl"><table><tr><th>Wk</th><th class="n">Avg kg</th><th class="n">Waist</th><th class="n">Steps</th><th class="n">Sleep</th><th class="n">Drinks</th><th class="n">Gym</th><th class="n">Done</th></tr>';
+    for(const r of have) h += '<tr><td>'+r.w+'</td><td class="n">'+f1(r.wt)+'</td><td class="n">'+f1(r.wa)+'</td><td class="n">'+(r.st==null?"–":Math.round(r.st).toLocaleString("en-IN"))+'</td><td class="n">'+f1(r.sl)+'</td><td class="n">'+r.al+'</td><td class="n">'+r.gym+'</td><td class="n">'+(r.cp==null?"–":Math.round(r.cp*100)+"%")+'</td></tr>';
+    h += '</table></div>';
+  }
+  h += '</div>';
+  const td = dayOf(planToday());
+  h += '<div class="card"><h2>90-day map</h2><p class="muted">Each square is a day. Brighter means more of the plan done. Tap one to open it.</p><div class="heat">';
+  for(let i=1;i<=90;i++){ const kk = keyForDay(i), x = S.logs[kk]; let c = ""; if(x && x.p!=null) c = x.p>=1?"l4":x.p>=.7?"l3":x.p>=.4?"l2":x.p>0?"l1":""; h += '<button class="'+c+(i>td?" fu":"")+(kk===k?" cur":"")+'" data-act="goto" data-k="'+kk+'" aria-label="Day '+i+'"></button>'; }
+  h += '</div></div>';
+  const nextB = bl.find(b=>!b.got);
+  h += '<div class="card"><h2>Badges</h2><div class="badges">'+bl.map(b=>'<div class="bdg'+(b.got?" got":"")+'"><div class="e">'+b.e+'</div><div class="bn">'+esc(b.n)+'</div></div>').join("")+'</div>'+
+    '<p class="muted" style="margin-top:10px">'+(nextB?'Next badge: '+esc(nextB.n)+'. '+esc(nextB.desc)+'.':'Every badge unlocked. Unreal.')+'</p></div>';
+  return h;
+}
+function feedback(rows){
+  const w = rows.filter(r=>r.wt!=null);
+  if(w.length<2) return "One more week of weigh-ins and you'll see your weekly change.";
+  const a = w[w.length-2], b = w[w.length-1], ch = b.wt-a.wt;
+  const s = "Week "+b.w+" vs week "+a.w+": "+(ch>0?"+":"")+(Math.round(ch*10)/10)+" kg. ";
+  if(b.w>=4 && ch<-1) return s+"Faster than planned. Add a snack to protect muscle and hair.";
+  if(ch<=-0.3) return s+"On track. Change nothing. 🔥";
+  if(w.length>=3 && b.wt-w[w.length-3].wt > -0.3) return s+"Flat for 2 weeks: check alcohol and outside snacks, then cut 150–200 kcal or add 2,000 steps.";
+  return s+"Slower week. One week isn't a trend; check alcohol and snacks.";
+}
+function drawChart(){
+  const el = document.getElementById("chart"); if(!el) return;
+  const rows = weekStats().filter(r=>r.wt!=null); if(!rows.length) return;
+  const W0=400,H=200,pl=34,pr=10,pt=20,pb=26, vals = rows.map(r=>r.wt);
+  const mn = Math.floor(Math.min(...vals)-1), mx = Math.ceil(Math.max(...vals)+1);
+  const x = w => pl+(w-1)*(W0-pl-pr)/12, y = v => pt+(mx-v)*(H-pt-pb)/((mx-mn)||1);
+  let g = ""; const step = Math.max(1,Math.round((mx-mn)/4));
+  for(let v=mn; v<=mx; v+=step) g += '<line x1="'+pl+'" x2="'+(W0-pr)+'" y1="'+y(v)+'" y2="'+y(v)+'" stroke="#3A2C70"/><text x="'+(pl-6)+'" y="'+(y(v)+4)+'" text-anchor="end" font-size="12" fill="#B9AEDB">'+v+'</text>';
+  for(let w=1; w<=13; w++) g += '<text x="'+x(w)+'" y="'+(H-6)+'" text-anchor="middle" font-size="12" fill="#7F73A8">'+w+'</text>';
+  const pts = rows.map(r=>x(r.w)+","+y(r.wt)).join(" ");
+  const area = x(rows[0].w)+","+(H-pb)+" "+pts+" "+x(rows[rows.length-1].w)+","+(H-pb);
+  el.innerHTML = '<svg viewBox="0 0 '+W0+' '+H+'" role="img" aria-label="Weekly average weight"><defs><linearGradient id="ar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF8A3D" stop-opacity=".35"/><stop offset="1" stop-color="#FF8A3D" stop-opacity="0"/></linearGradient></defs>'+g+
+    '<polygon points="'+area+'" fill="url(#ar)"/><polyline points="'+pts+'" fill="none" stroke="url(#sunGrad)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>'+
+    rows.map(r=>'<circle cx="'+x(r.w)+'" cy="'+y(r.wt)+'" r="5" fill="#FFC53D" stroke="#160C2B" stroke-width="2"/>').join("")+
+    '<text x="'+pl+'" y="12" font-size="12" fill="#B9AEDB">kg, weekly average, by week</text></svg>';
+}
+
+function me(){
+  const s = S.settings, sw = (key,label,desc) => '<div class="tog"><div class="lbl"><b>'+label+'</b><span>'+desc+'</span></div><button class="sw'+(s[key]?" on":"")+'" data-act="sw" data-k="'+key+'" role="switch" aria-checked="'+!!s[key]+'" aria-label="'+label+'"></button></div>';
+  let h = '<div class="card"><h2>Reminders</h2>'+(NATIVE?'':'<p class="muted">Reminders work in the installed Android app.</p>')+
+    sw("notify","Task reminders","A notification at each task's time, with a Done button.")+
+    sw("water","Water nudges","Extra pings at 11:30 am, 4:00 pm and 6:30 pm.")+
+    '<div class="row"><button class="btn ghost" data-act="testnotif">Send a test in 5 seconds</button></div><p class="muted" id="nstatus" style="margin-top:8px">'+esc(notifStatus)+'</p>'+
+    '<p class="muted">Not getting reminders? Phone Settings → Apps → 90 Days → Battery → Unrestricted. Xiaomi, Oppo, Vivo, Realme and some Samsung phones also need Autostart turned on. Keep a normal alarm for waking up.</p></div>';
+  h += '<div class="card"><h2>Feel</h2>'+sw("sound","Sounds","Rising chimes for every tick and level-up.")+sw("haptics","Vibration","A little buzz on every win.")+'</div>';
+  h += '<div class="card"><h2>Guide</h2>'+
+    det("Skin routine",["Morning: face wash, vitamin C serum (from Week 2), gel moisturiser, SPF 50 sunscreen.","Night: face wash, moisturiser, benzoyl peroxide 2.5% (every 2nd night in Weeks 3–4, then nightly).","Never vitamin C and benzoyl peroxide at the same time. BPO bleaches fabric.","Don't squeeze pimples. No acids on the bumps under your eyes."])+
+    det("Hair routine",["Weeks 1–4: medicated shampoo Mon and Thu, mild on Sat.","Weeks 5+: medicated Mon, mild Wed and Sat.","Leave medicated shampoo on the scalp 3–5 minutes.","No heavy overnight oil while dandruff is active. Monthly hairline and crown photos."])+
+    det("Supplements",["Week 1: protein powder (1 scoop a day) and isabgol.","Week 2+: basic multivitamin (iron-free or low-iron), B12 as per label, vitamin D3 1,000–2,000 IU a day in total.","Don't take: iron without a test, extra zinc, biotin, fat burners, detox teas.","Breakouts worse on whey after 3–4 weeks? Switch to plant protein."])+
+    det("See a doctor",["Emergency: chest pain or pressure, severe breathlessness, fainting, sudden severe headache or one-sided weakness.","GP: snoring with daytime sleepiness, unusual thirst or urination, persistent acidity, trouble cutting down alcohol.","Dermatologist: skin not better by week 8–12, painful deep lumps, scars, under-eye bumps, visible thinning, patchy hair loss.","Stress at 10/10 or low mood for 2+ weeks: Tele-MANAS 14416 (free, 24/7).","Quit smoking: National Tobacco Quitline 1800-11-2356 (free)."])+
+    det("Blood test without the fear",["All tests come from one draw, under 2 minutes.","Book home collection; lie down; tell the technician you're nervous.","Ask a pharmacist about numbing cream an hour before. Aim to do it by Day 60."])+
+    det("After Day 90",["Keep going toward 72 kg at 0.3–0.5 kg a week.","At target: add 150–250 kcal a day for 2–3 weeks until weight holds.","If weight rises 2 kg or waist 3 cm: 4 weeks of Phase 1 habits."])+'</div>';
+  h += '<div class="card"><h2>Plan</h2><div class="f" style="max-width:240px"><label for="sd">Day 1</label><input type="date" id="sd" value="'+esc(S.startDate)+'"></div><div class="row"><button class="btn ghost" data-act="setstart">Change start date</button></div></div>';
+  h += '<div class="card"><h2>Backup</h2><p class="muted">Your data lives only on this phone. Copy a backup now and then and keep it safe, for example in WhatsApp "Message yourself" or Notes.</p>'+
+    '<div class="row"><button class="btn ghost" data-act="backup">Copy backup</button></div><textarea id="restoreTxt" placeholder="Paste a backup here to restore"></textarea><div class="row"><button class="btn ghost" data-act="restore">Restore from backup</button>'+
+    '<button class="btn danger" data-act="reset">'+(ui.confirmReset?"Tap again to erase everything":"Erase all data")+'</button></div></div>';
+  h += '<p class="muted" style="text-align:center;margin-top:18px">90 Days. Your plan, your data, fully offline.</p>';
+  return h;
+}
+
+function onboarding(){
+  const t = planToday(), d = parseKey(t), mon = addDays(t,(8-d.getDay())%7);
+  if(ui.onbStep===1 || !S.startDate){
+    return '<section class="onb"><div class="steps"><i class="on"></i><i></i></div><h1>90 days.<br><span>Let\'s go.</span></h1>'+
+      '<p>Your plan, turned into daily quests. Tick tasks, earn XP, level up, keep the streak alive.</p><p>Pick your Day 1. A Monday keeps gym days lined up.</p>'+
+      '<div class="f"><label for="sd0">Day 1</label><input type="date" id="sd0" value="'+(S.startDate||mon)+'"></div>'+
+      '<div class="row"><button class="btn" data-act="onb1">Next</button><button class="btn ghost" data-act="onb1today">Start today</button></div></section>';
+  }
+  return '<section class="onb"><div class="steps"><i class="on"></i><i class="on"></i></div><h1>Never miss<br><span>a quest.</span></h1>'+
+    '<p>Turn on reminders and your phone pings you for each task: wake up, water, meals, gym, phone away, lights out. Each has a Done button.</p>'+
+    '<div class="row"><button class="btn" data-act="onb2">Turn on reminders</button><button class="btn ghost" data-act="onbskip">Later</button></div></section>';
+}
+
+/* ================= Actions ================= */
+function setP(k){ const c = completion(k); lg(k).p = Math.round(c.p*100)/100; return c; }
+function checkPerfect(k){
+  const c = completion(k), has = !!(pk(k).xp||{}).perfect;
+  if(c.p>=1 && !has){ award(k,"perfect",50); setTimeout(()=>celebrate("🌟","Perfect day","Every quest done. +50 XP bonus."),400); }
+  else if(c.p<1 && has) award(k,"perfect",0);
+}
+function afterChange(prevXP){
+  const xp = totalXP(), lvB = levelOf(prevXP), lvA = levelOf(xp);
+  if(lvA>lvB) setTimeout(()=>celebrate("⚡","Level "+lvA,"You're now a "+titleOf(lvA)+". Keep stacking."),900);
+  const fresh = badgeList().filter(b=>b.got && !S.seen.includes(b.id));
+  if(fresh.length){ fresh.forEach(b=>S.seen.push(b.id)); const b = fresh[0]; setTimeout(()=>{ toast(b.e+" Badge unlocked: "+b.n); tone([784,988,1318],0.35); },lvA>lvB?2800:900); }
+  save(); scheduleSoon();
+}
+function toggleTask(k,id,el,force){
+  const prev = totalXP(), plan = buildDay(k), it = plan.items.find(i=>i.id===id); if(!it) return;
+  const l = lg(k); l.c = l.c||{};
+  const on = force===undefined ? !l.c[id] : force;
+  if(on===!!l.c[id]) return;
+  if(on){
+    l.c[id] = true;
+    let amt = it.xp; const ot = onTimeWindow(k,it); if(ot) amt += 5;
+    award(k,"t:"+id,amt);
+    ui.lastPop = id; sndCheck(); buzz(20);
+    const r = el ? el.getBoundingClientRect() : {left:innerWidth/2,top:innerHeight/2,width:0,height:0};
+    burst(r.left+r.width/2,r.top+r.height/2,26,6); floatXP(r.left+r.width/2,r.top,"+"+amt+(ot?" on time!":""));
+    if(combo>=3 && Math.random()<.5) toast(["Combo ×"+(combo+1)+"! 🔥","On a roll!","Unstoppable!","Keep it going!"][Math.floor(Math.random()*4)]);
+  } else { delete l.c[id]; award(k,"t:"+id,0); buzz(8); }
+  setP(k); checkPerfect(k); rerender(); afterChange(prev);
+}
+function proteinXP(k,btn){
+  const plan = buildDay(k), g = proteinGoal(plan.wk), p = proteinOf(pk(k)), had = !!(pk(k).xp||{}).pt;
+  if(p>=g[0] && !had){ award(k,"pt",20); if(btn){ const r = btn.getBoundingClientRect(); burst(r.left+r.width/2,r.top,40,7); floatXP(r.left+r.width/2,r.top,"+20 🥛"); } tone([660,880,1100],0.3); buzz([20,40,20]); }
+  else if(p<g[0] && had) award(k,"pt",0);
+  else { tone([620],0.1,"sine",0.1); buzz(8); }
+}
+function setTap(k,btn){
+  const prev = totalXP(), l = lg(k); l.sets = l.sets||{};
+  const ex = btn.dataset.ex, i = +btn.dataset.i, n = +btn.dataset.n, cur = l.sets[ex]||0;
+  const nv = (i < cur) ? i : i+1;
+  l.sets[ex] = nv; award(k,"set:"+ex,nv*2);
+  if(nv>cur){ const r = btn.getBoundingClientRect(); burst(r.left+r.width/2,r.top+r.height/2,18,5); floatXP(r.left+r.width/2,r.top,"+"+((nv-cur)*2)); sndCheck(); buzz(15); if(nv<n) startRest(90); else stopRest(); }
+  const plan = buildDay(k), code = curCode(plan), list = workoutList(code,plan.d);
+  let total = 0, done = 0; for(const e of list){ const m = setsOf(e[2]); total += m; done += Math.min(m,l.sets[e[0]]||0); }
+  if(done>=total && !(l.xp||{}).boss){
+    award(k,"boss",50);
+    if(plan.gym===code && !(l.c||{}).gym){ l.c = l.c||{}; l.c.gym = true; award(k,"t:gym",30); setP(k); checkPerfect(k); }
+    stopRest(); setTimeout(()=>celebrate("🏆","Boss defeated",W[code].name+" crushed. +50 XP."),300);
+  }
+  rerender(); afterChange(prev);
+}
+
+document.addEventListener("click",ev=>{
+  const t = ev.target.closest("[data-act],[data-tab]"); if(!t) return;
+  if(t.dataset.tab){ ui.tab = t.dataset.tab; ui.pickW = null; ui.confirmReset = false; render(); scrollTo(0,0); buzz(6); return; }
+  const a = t.dataset.act, k = ui.view;
+  switch(a){
+    case "onb1": { const v = document.getElementById("sd0").value || planToday(); S.startDate = v; ui.onbStep = 2; save(); render(); break; }
+    case "onb1today": S.startDate = planToday(); ui.onbStep = 2; save(); render(); break;
+    case "onb2": askPermission().then(()=>{ S.onboarded = true; save(); ui.view = null; render(); burst(innerWidth/2,innerHeight/3,60,8); sndBig(); scheduleSoon(); }); break;
+    case "onbskip": S.onboarded = true; save(); ui.view = null; render(); break;
+    case "prev": ui.view = addDays(k,-1); ui.pickW = null; render(); break;
+    case "next": ui.view = addDays(k,1); ui.pickW = null; render(); break;
+    case "today": ui.view = planToday(); ui.pickW = null; render(); break;
+    case "goto": ui.view = t.dataset.k; ui.tab = "today"; render(); scrollTo(0,0); break;
+    case "toggle": toggleTask(k,t.dataset.id,t); break;
+    case "done": toggleTask(k,t.dataset.id,t,true); break;
+    case "pickw": ui.pickW = t.dataset.w; render(); break;
+    case "set": setTap(k,t); break;
+    case "food": { const prev = totalXP(), l = lg(k); l.pl = (l.pl||[]).concat(t.dataset.f); proteinXP(k,t); rerender(); afterChange(prev); break; }
+    case "foodundo": { const prev = totalXP(), l = lg(k); l.pl = (l.pl||[]).slice(0,-1); proteinXP(k); rerender(); afterChange(prev); break; }
+    case "glass": { const prev = totalXP(), l = lg(k), i = +t.dataset.i, cur = +l.wt||0; l.wt = (i+1===cur) ? i : i+1;
+      if(l.wt>=12 && !(l.xp||{}).wt){ award(k,"wt",15); const r = t.getBoundingClientRect(); burst(r.left+r.width/2,r.top,40,7); floatXP(r.left+r.width/2,r.top,"+15 💧"); tone([660,880,1100],0.3); }
+      else if(l.wt<12) award(k,"wt",0);
+      tone([500+l.wt*40],0.12,"sine",0.12); buzz(10); rerender(); afterChange(prev); break; }
+    case "sw": { const key = t.dataset.k; S.settings[key] = !S.settings[key]; save(); rerender(); if(key==="notify"||key==="water"){ if(S.settings[key]) askPermission(); else scheduleSoon(); } break; }
+    case "testnotif": testNotif(); break;
+    case "setstart": { const v = document.getElementById("sd").value; if(v){ S.startDate = v; save(); ui.view = planToday(); toast("Day 1 set to "+fmtShort(v)); render(); scheduleSoon(); } break; }
+    case "backup": copyText(JSON.stringify(S)); break;
+    case "restore": { try{ const d = JSON.parse(document.getElementById("restoreTxt").value); if(!d || typeof d.logs!=="object") throw 0; S = Object.assign(fresh(),d,{onboarded:true}); S.settings = Object.assign({},DEF_SET,d.settings||{}); save(); toast("Backup restored ✅"); ui.view = null; render(); scheduleSoon(); }catch(e){ toast("That isn't a valid backup. Copy the whole text again and paste it."); } break; }
+    case "reset": if(!ui.confirmReset){ ui.confirmReset = true; rerender(); } else { S = fresh(); save(); ui.confirmReset = false; ui.onbStep = 1; ui.tab = "today"; ui.view = null; render(); scheduleSoon(); } break;
+    case "closecel": document.getElementById("overlay").innerHTML = ""; break;
+    case "skiprest": stopRest(); break;
+    case "addrest": restEnd += 30000; restTick(); break;
+  }
+});
+document.addEventListener("change",ev=>{
+  const t = ev.target, k = ui.view;
+  if(t.dataset.f){
+    const prev = totalXP(), l = lg(k), f = t.dataset.f, v = t.value;
+    if(v===""||v==null){ delete l[f]; award(k,"f:"+f,0); }
+    else { const first = l[f]===undefined; l[f] = v; award(k,"f:"+f,3); if(first){ const r = t.getBoundingClientRect(); floatXP(r.left+r.width/2,r.top,"+3"); tone([700],0.1,"sine",0.1); } }
+    save(); if(["w","wa","st","sl","al"].includes(f)) rerender(); afterChange(prev);
+  } else if(t.dataset.exlog){
+    const l = lg(k); l.x = l.x||{}; const v = t.value.trim().slice(0,80); if(v) l.x[t.dataset.exlog] = v; else delete l.x[t.dataset.exlog]; save();
+  }
+});
+function copyText(s){
+  const done = () => toast("Backup copied. Paste it somewhere safe 📋");
+  const fallback = () => { const ta = document.getElementById("restoreTxt"); ta.value = s; ta.focus(); ta.select(); try{ if(document.execCommand("copy")) done(); else toast("Backup is in the box below. Select all and copy it."); }catch(e){ toast("Backup is in the box below. Select all and copy it."); } };
+  if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(s).then(done,fallback); else fallback();
+}
+
+/* ================= Rest timer ================= */
+let restEnd = 0, restInt = 0;
+function startRest(sec){ restEnd = Date.now()+sec*1000; clearInterval(restInt); restInt = setInterval(restTick,250); restTick(); }
+function stopRest(){ clearInterval(restInt); restInt = 0; restEnd = 0; document.getElementById("rest").innerHTML = ""; }
+function restTick(){
+  if(!restEnd) return;
+  const left = Math.max(0,Math.round((restEnd-Date.now())/1000));
+  document.getElementById("rest").innerHTML = '<div class="restpill" role="timer"><span>Rest</span><b>'+Math.floor(left/60)+':'+pad(left%60)+'</b><button data-act="addrest">+30 s</button><button data-act="skiprest">Skip</button></div>';
+  if(left<=0){ stopRest(); sndRest(); buzz([200,100,200]); toast("Next set! 💪"); }
+}
+
+/* ================= Notifications (Capacitor) ================= */
+const CAP = window.Capacitor;
+const NATIVE = !!(CAP && typeof CAP.isNativePlatform==="function" && CAP.isNativePlatform());
+const LN = NATIVE ? ((CAP.Plugins && CAP.Plugins.LocalNotifications) || CAP.registerPlugin("LocalNotifications")) : null;
+let notifStatus = NATIVE ? "Checking reminders…" : "Preview mode: reminders only work in the installed app.";
+function setStatus(s){ notifStatus = s; const el = document.getElementById("nstatus"); if(el) el.textContent = s; }
+const errMsg = e => (e && e.message) || String(e);
+async function askPermission(){
+  if(!LN) return false;
+  try{
+    let p = await LN.checkPermissions();
+    if(p.display!=="granted") p = await LN.requestPermissions();
+    if(p.display!=="granted"){ setStatus("Notifications are blocked. Allow them in phone Settings → Apps → 90 Days → Notifications."); return false; }
+    await scheduleAll(); return true;
+  }catch(e){ setStatus("Couldn't turn on reminders: "+errMsg(e)); return false; }
+}
+async function setupNative(){
+  if(!LN) return;
+  try{
+    await LN.createChannel({id:"quests",name:"Daily quests",description:"Reminders for each task in your plan",importance:5,visibility:1,vibration:true,sound:"chime.wav"});
+    await LN.registerActionTypes({types:[{id:"QUEST",actions:[{id:"done",title:"Done ✓"},{id:"snooze",title:"Snooze 15 min"}]}]});
+    await LN.addListener("localNotificationActionPerformed",async a=>{
+      const n = a.notification || {}, ex = n.extra || {};
+      if(a.actionId==="done" && ex.k && ex.id){ ui.view = ex.k; ui.tab = "today"; render(); toggleTask(ex.k,ex.id,null,true); toast("Logged from the notification ✅"); }
+      else if(a.actionId==="snooze"){
+        try{ await LN.schedule({notifications:[{id:900000+Math.floor(Math.random()*90000),title:n.title||"Quest time",body:n.body||"",schedule:{at:new Date(Date.now()+15*60000),allowWhileIdle:true},channelId:"quests",actionTypeId:"QUEST",extra:ex,smallIcon:"ic_stat_icon",iconColor:"#FF6A3D"}]}); toast("Snoozed for 15 minutes ⏰"); }catch(e){}
+      }
+      else if(ex.k){ ui.view = ex.k; ui.tab = "today"; render(); }
+    });
+    await LN.addListener("localNotificationReceived",n=>{ toast("⏰ "+(n.title||"Quest time")); });
+    const p = await LN.checkPermissions();
+    if(p.display==="granted") await scheduleAll(); else setStatus("Reminders are off. Turn on a switch above to enable them.");
+  }catch(e){ setStatus("Reminder setup issue: "+errMsg(e)); }
+}
+let schedT = 0, scheduling = false, again = false;
+function scheduleSoon(){ if(!LN) return; clearTimeout(schedT); schedT = setTimeout(scheduleAll,1500); }
+const epochDay = k => Math.round(parseKey(k).getTime()/86400000);
+async function scheduleAll(){
+  if(!LN) return;
+  if(scheduling){ again = true; return; }
+  scheduling = true;
+  try{
+    const pend = await LN.getPending();
+    const old = (pend.notifications||[]).filter(n=>n.id<900000);
+    if(old.length) await LN.cancel({notifications:old.map(n=>({id:n.id}))});
+    if(!S.startDate || !S.onboarded || (!S.settings.notify && !S.settings.water)){ setStatus("Reminders are off."); return; }
+    const p = await LN.checkPermissions(); if(p.display!=="granted"){ setStatus("Notifications are blocked in phone settings."); return; }
+    const now = Date.now(), list = []; let k = planToday();
+    for(let i=0;i<10;i++, k = addDays(k,1)){
+      if(dayOf(k)<1) continue;
+      const plan = buildDay(k), c = pk(k).c||{}, base = (epochDay(k)%17000)*50;
+      if(S.settings.notify) plan.items.forEach((it,idx)=>{
+        if(c[it.id]) return; const at = taskDate(k,it.t); if(at.getTime() <= now+30000) return;
+        list.push({id:base+idx,title:it.title,body:it.det+"  +"+it.xp+" XP",schedule:{at,allowWhileIdle:true},channelId:"quests",actionTypeId:"QUEST",extra:{k,id:it.id},smallIcon:"ic_stat_icon",iconColor:"#FF6A3D",autoCancel:true});
+      });
+      if(S.settings.water) [["11:30 am","Water check 💧","Drink a glass now. Aim for 3 L today."],["4:00 pm","Water check 💧","Afternoon glass. Water helps with cravings."],["6:30 pm","Water check 💧","One more glass before the evening."]].forEach((w,j)=>{
+        const at = taskDate(k,w[0]); if(at.getTime() <= now+30000) return;
+        list.push({id:base+45+j,title:w[1],body:w[2],schedule:{at,allowWhileIdle:true},channelId:"quests",extra:{k},smallIcon:"ic_stat_icon",iconColor:"#FF6A3D",autoCancel:true});
+      });
+    }
+    if(list.length){ const r = await LN.schedule({notifications:list}); if(r && r.warning) setStatus("On, but your phone may delay reminders by a few minutes."); }
+    const first = list.slice().sort((a,b)=>a.schedule.at-b.schedule.at)[0];
+    setStatus(list.length ? "On: "+list.length+" reminders set for the next 10 days. Next: "+first.title+", "+first.schedule.at.toLocaleString("en-IN",{weekday:"short",hour:"numeric",minute:"2-digit"})+". Open the app at least once a week to keep them topped up." : "On. Nothing left to remind today.");
+  }catch(e){ setStatus("Couldn't set reminders: "+errMsg(e)); }
+  finally{ scheduling = false; if(again){ again = false; scheduleSoon(); } }
+}
+async function testNotif(){
+  if(!LN){ toast("Reminders work in the installed app."); return; }
+  const ok = await askPermission(); if(!ok) return;
+  try{ await LN.schedule({notifications:[{id:999999,title:"Test quest ⚡",body:"If you can see this, reminders work.",schedule:{at:new Date(Date.now()+5000),allowWhileIdle:true},channelId:"quests",smallIcon:"ic_stat_icon",iconColor:"#FF6A3D"}]}); toast("Test coming in 5 seconds. You can close the app."); }catch(e){ toast("Test failed: "+errMsg(e)); }
+}
+
+/* ================= Boot ================= */
+document.addEventListener("visibilitychange",()=>{ if(!document.hidden && S.startDate && S.onboarded){ const t = planToday(); if(ui.view && ui.view < t && ui.tab==="today") ui.view = t; rerender(); scheduleSoon(); } });
+setInterval(()=>{ if(!document.hidden && S.onboarded && ui.tab==="today" && ui.view===planToday() && !document.querySelector(".celebrate") && document.activeElement.tagName!=="INPUT") rerender(); },60000);
+load(); render(); setupNative();
+})();
+</script>
+</body>
+</html>
