@@ -1,1 +1,73 @@
+name: Build 90 Days app
 
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Get the files
+        uses: actions/checkout@v5
+
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Set up Android tools
+        run: |
+          echo "Android SDK at: $ANDROID_HOME"
+          SDKM="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          yes | "$SDKM" --licenses > /dev/null || true
+          "$SDKM" "platforms;android-36" "build-tools;36.0.0" "platform-tools" > /dev/null || true
+
+      - name: Install app parts
+        run: npm install --no-audit --no-fund
+
+      - name: Create the Android project
+        run: |
+          cp node_modules/@capacitor/core/dist/capacitor.js www/capacitor.js
+          npx cap add android
+          node scripts/patch-android.js
+          npx cap sync android
+        env:
+          BUILD_NUMBER: ${{ github.run_number }}
+
+      - name: Use the fixed signing key (so updates install over the old app)
+        run: |
+          mkdir -p ~/.android
+          cp keys/debug.keystore ~/.android/debug.keystore
+
+      - name: Build the APK
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+          cp app/build/outputs/apk/debug/app-debug.apk ../90-days.apk
+
+      - name: Save the APK as a download
+        uses: actions/upload-artifact@v4
+        with:
+          name: 90-days-apk
+          path: 90-days.apk
+
+      - name: Publish the APK on the Releases page
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-${{ github.run_number }}
+          name: 90 Days app, build ${{ github.run_number }}
+          body: Download 90-days.apk below and open it on your Android phone.
+          files: 90-days.apk
+          make_latest: true
