@@ -188,11 +188,49 @@ textarea{width:100%;min-height:90px;background:var(--bg2);border:1px solid var(-
 
 /* Nav */
 .nav{position:fixed;left:0;right:0;bottom:0;z-index:20;background:rgba(18,9,36,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);padding-bottom:var(--bot)}
-.nav .in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr)}
-.nav button{padding:10px 0 12px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:12px;font-weight:700;color:var(--dim)}
+.nav .in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(6,1fr)}
+.nav button{padding:10px 0 12px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:700;color:var(--dim)}
 .nav svg{width:24px;height:24px}
 .nav button.on{color:var(--ink)}
 .nav button.on svg{stroke:url(#sunGrad)}
+
+/* Style */
+.mini{display:flex;gap:10px;align-items:center;margin-top:12px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px;width:100%;text-align:left}
+.mini .mt{flex:1;font-size:14px;color:var(--muted)}.mini .mt b{color:var(--ink)}
+.mini .go{color:var(--gold);font-weight:800}
+.ootd{margin-top:14px;border-radius:22px;padding:16px;background:linear-gradient(140deg,#123A4F,#2A1550);border:1px solid #2F6F8F}
+.ootd .tp{display:inline-block;font-size:12px;font-weight:800;background:rgba(110,200,255,.18);color:var(--sky);border-radius:99px;padding:3px 10px}
+.ootd h2{font-family:var(--display);font-size:20px;margin:8px 0 10px}
+.ootd .ln{display:grid;grid-template-columns:62px 1fr;gap:8px;padding:6px 0;border-top:1px solid rgba(255,255,255,.08);font-size:15px}
+.ootd .ln span{color:var(--muted);font-size:13px}
+.ootd .why{color:var(--muted);font-size:13.5px;margin-top:8px}
+.ootd .miss{margin-top:8px;font-size:13px;color:var(--orange)}
+.bud .bk{margin-top:12px}
+.bud .bk .t{display:flex;justify-content:space-between;font-size:14px}
+.bud .bk .t b{font-weight:700}
+.bud .bk .bar{height:12px}
+.card .bar{background:var(--bg2)}
+.bud .bk .bar i.over{background:linear-gradient(90deg,#FF4D6D,#B3261E)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.chips button{background:var(--card2);border:1px solid var(--line);border-radius:99px;padding:7px 12px;font-weight:700;font-size:13px}
+.chips button.on{background:var(--ink);color:var(--bg)}
+.cat{font-family:var(--display);font-size:14px;color:var(--muted);margin:16px 0 6px}
+.si{background:var(--bg2);border:1px solid var(--line);border-radius:14px;margin-bottom:8px;overflow:hidden}
+.si .row1{display:grid;grid-template-columns:1fr 44px;align-items:center}
+.si .hd{padding:10px 12px;text-align:left}
+.si .sn{font-weight:700;font-size:14.5px;display:block}
+.si .pl{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.si .sck{width:36px;height:36px;border-radius:12px;border:2px solid var(--line);display:grid;place-items:center;margin-right:8px;font-weight:900;color:transparent}
+.si.done{border-color:rgba(67,243,176,.35)}
+.si.done .sn{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--mint)}
+.si.done .sck{background:var(--mint);border-color:transparent;color:#0E2A20}
+.si .sd{padding:0 12px 12px;font-size:14px;color:var(--muted)}
+.si .sd input{width:120px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 10px}
+.pill.m{background:rgba(255,77,109,.18);color:#FF8FA3}.pill.g{background:rgba(110,200,255,.14);color:var(--sky)}.pill.o{background:var(--card2);color:var(--dim)}
+.pill.due{background:rgba(255,197,61,.16);color:var(--gold)}
+.dtrow{display:grid;grid-template-columns:44px 1fr;gap:8px;align-items:center;margin-top:8px}
+.dtrow .chips{margin-top:0}
+.meas{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}
 
 /* Overlays */
 #fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:50}
@@ -229,6 +267,7 @@ textarea{width:100%;min-height:90px;background:var(--bg2);border:1px solid var(-
     <button data-tab="today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>Today</button>
     <button data-tab="workout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 7v10M18 7v10M3 10v4M21 10v4M6 12h12"/></svg>Workout</button>
     <button data-tab="fuel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3 4 6 6.5 6 10a6 6 0 01-12 0c0-3.5 3-6 6-10z"/></svg>Fuel</button>
+    <button data-tab="style"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3l4 3 4-3 5 3-2 5h-3v10H8V11H5L3 6z"/></svg>Style</button>
     <button data-tab="stats"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Stats</button>
     <button data-tab="me"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>Me</button>
   </div>
@@ -245,13 +284,14 @@ textarea{width:100%;min-height:90px;background:var(--bg2);border:1px solid var(-
 
 /* ================= Storage ================= */
 const KEY = "ninety-days-v1";
-const DEF_SET = { notify:true, water:true, sound:true, haptics:true };
-const fresh = () => ({ startDate:null, logs:{}, settings:Object.assign({},DEF_SET), seen:[], onboarded:false });
+const DEF_SET = { notify:true, water:true, sound:true, haptics:true, shopNotify:true, tier:"S", office:{1:"formal",2:"biz",3:"biz",4:"biz",5:"casual"} };
+const defSet = () => JSON.parse(JSON.stringify(DEF_SET));
+const fresh = () => ({ startDate:null, logs:{}, settings:Object.assign(defSet()), seen:[], onboarded:false, shop:{}, meas:{} });
 let S = fresh();
 function load(){
   try{
     const raw = localStorage.getItem(KEY);
-    if(raw){ const d = JSON.parse(raw); if(d && typeof d==="object"){ S = Object.assign(fresh(),d); S.settings = Object.assign({},DEF_SET,d.settings||{}); S.logs = d.logs||{}; S.seen = d.seen||[]; } }
+    if(raw){ const d = JSON.parse(raw); if(d && typeof d==="object"){ S = Object.assign(fresh(),d); S.settings = Object.assign(defSet(),d.settings||{}); S.logs = d.logs||{}; S.seen = d.seen||[]; } }
   }catch(e){}
 }
 function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){ toast("Could not save. Storage may be full."); } }
@@ -359,6 +399,7 @@ function buildDay(k){
     add("am",wk<=4?"8:15 am":"7:45 am","Shower + morning skincare",amSkin(wk));
     if(wk>=5) add("mwalk","8:30 am","15–20 min brisk walk","About 2,000 bonus steps.",{opt:true});
     add("bf","9:00 am","Protein breakfast",meal("b",d)+"."+supp);
+    add("fresh","9:20 am","Fresh kit check","Deodorant, lip balm, carry kit in your bag. Outfit: "+outfitFor(k).o.name+".",{xp:5});
     add("water","10:00 am","Finish 1 L water by lunch","Stand and move 2–3 minutes every hour.");
     add("lunch","2:00 pm","Lunch, plate method",meal("l",d)+". Protein first, then veg, then carbs.");
     add("lwalk","2:30 pm","10-minute walk after lunch","Beats the post-lunch slump.");
@@ -379,6 +420,9 @@ function buildDay(k){
     else add("swalk","9:00 am","Easy 20–30 min walk","Sunday is recovery. Optional.",{opt:true});
     add("bf","10:00 am","Protein breakfast",meal("b",d)+"."+supp);
     add("am","10:30 am","Morning skincare",amSkin(wk)+" Sunscreen if you go out.");
+    add("fresh","10:40 am","Fresh kit check","Deodorant, lip balm, comb. Outfit: "+outfitFor(k).o.name+".",{xp:5});
+    if(dow===0) add("groom","11:00 am","Weekly grooming session","Nails, nose and ear hair, wipe shoes, iron the week's office clothes.",{xp:20});
+    if(haircutDue(k)) add("haircut","12:30 pm","Haircut day 💈","Ask for short tapered sides with texture on top. Tick it when done.",{xp:20});
     if(dow===0) add("plan","11:30 am","Plan the week","Tiffin, curd, fruit, chana. Pick your one social night.");
     add("lunch","2:00 pm","Lunch, plate method",meal("l",d)+".");
     add("snack","5:30 pm","Planned evening snack",meal("s",d)+".");
@@ -387,6 +431,8 @@ function buildDay(k){
     add("dinner","9:00 pm","Dinner, done by 9:30 pm",meal("d",d)+". Going out? Eat protein first.");
     if(dow===0) add("checkin","9:45 pm","Weekly check-in","Measure waist at the navel, log it in Stats.",{xp:20});
   }
+  if(d%3===0) add("beard","10:00 pm","Beard trim","Neckline two fingers above the Adam's apple; chin a little longer than the sides.",{xp:5});
+  add("outfit","10:15 pm","Lay out tomorrow's outfit","Tomorrow: "+outfitFor(addDays(k,1)).o.name+". Ironed, belt matches shoes.",{xp:5});
   if(hair) add("hair","10:30 pm",hair==="med"?"Hair wash: medicated shampoo":"Hair wash: mild shampoo",hair==="med"?"Lather into the scalp, leave 3–5 minutes, rinse.":"Your regular mild shampoo. Dry fully before bed.");
   add("pm","11:00 pm","Evening skincare",pmSkin(wk,d));
   add("phone",bt.phone,"Phone away from the bed","Dim lights. Read, stretch or listen to audio.");
@@ -435,6 +481,133 @@ function weekStats(){
   }
   return rows;
 }
+
+/* ================= Style: shopping, budget, outfits ================= */
+const CATS = {A:"Tracking and health",B:"Gym",C:"Food and nutrition",D:"Skin",E:"Hair and beard",F:"Supplements",G:"Sleep and quitting",H:"Clothes",I:"Shoes and accessories",J:"Grooming kit",K:"Clothes care"};
+const WHEN = {w1:["Week 1",1,7],w2:["Week 2",8,14],w13:["Weeks 1–3",1,21],w23:["Weeks 2–3",8,21],A:["Weeks 1–2",1,14],B:["Days 60–90",60,90],w5:["Week 5+",29,90],any:["Any time",0,0],fest:["Before festivals",0,0]};
+// [id, cat, name, priority M/G/O, when, qty, what to look for, bucket plan/groom/A/B/home]
+const SHOP = [
+["scale","A","Digital weighing scale","M","w1","1","Flat glass top, 0.1 kg steps. Use it on a hard floor, same spot every time.","plan"],
+["tape","A","Cloth measuring tape","M","w1","1","Soft tailor's tape in cm. Also for clothing sizes.","plan"],
+["gp","A","GP visit (BP, snoring, blood tests)","M","w13","1","Bring the test list from your blueprint. Ask for home collection if needles worry you.","plan"],
+["dentist","A","Dentist: scaling and polishing","G","w23","1","Removes smoking and tea stains. Then every 6 months.","plan"],
+["bp","A","Home BP monitor","O","any","1","Upper-arm cuff type, not wrist.","plan"],
+["gym","B","Gym membership","M","w1","1","Near home or office, open after 7 pm. Ask for one free trainer session on form.","plan"],
+["gshoes","B","Training shoes","M","w1","1 pair","Flat, firm sole for lifting and walking. Not thick-cushioned running shoes.","plan"],
+["dryfit","B","Dry-fit gym t-shirts","M","w1","2","Dark colours (black, navy, charcoal). Not skin-tight.","plan"],
+["shorts","B","Gym shorts or joggers","M","w1","2","Elastic waist with drawstring, zip pocket for keys.","plan"],
+["ssocks","B","Sports socks","M","w1","3 pairs","Cotton-blend, cushioned sole.","plan"],
+["bottle","B","1 L water bottle","M","w1","1","Leak-proof, easy to wash.","plan"],
+["towel","B","Small gym towel","M","w1","1","Quick-dry microfibre.","plan"],
+["gbag","B","Gym bag","G","w2","1","Separate shoe compartment. Keep it packed by the door.","plan"],
+["ears","B","Earphones","G","any","1","Sweat-resistant.","plan"],
+["tiffin","C","Tiffin (dabba) service","M","w1","Lunch + dinner","Home-style. Ask for less rice, extra dal/sabji, curd. Try 1 week before committing.","plan"],
+["protein","C","Protein powder","M","w1","1 kg","Whey or plant, about 20–25 g protein per scoop, third-party tested. Not a mass gainer.","plan"],
+["shaker","C","Shaker bottle","M","w1","1","Mixing ball or mesh, easy to wash.","plan"],
+["isabgol","C","Isabgol (psyllium husk)","M","w1","1 pack","Plain, unflavoured, no added sugar.","plan"],
+["snacks","C","Snack kit","M","w1","Weekly","Roasted chana, roasted makhana, peanuts, curd or Greek yoghurt cups, fruit.","plan"],
+["kettle","C","Electric kettle + soya chunks","G","w2","1 + 1 pack","Kettle with auto shut-off.","plan"],
+["lunchbag","C","Lunch bag or insulated box","G","w2","1","Keeps curd and snacks fresh at the office.","plan"],
+["spf","D","Sunscreen SPF 50, PA+++","M","w1","1","Gel or matte texture, \"non-comedogenic\" on the label.","plan"],
+["moist","D","Gel moisturiser","M","w1","1","Oil-free, non-comedogenic, fragrance-free.","plan"],
+["bpo","D","Benzoyl peroxide 2.5% gel","M","w2","1 tube","2.5% only. Start in Week 3.","plan"],
+["lipbalm","D","Lip balm with SPF","M","w1","1","SPF 15 or higher, unscented.","groom"],
+["pillow","D","White or old pillowcases","M","w2","2","Benzoyl peroxide bleaches coloured fabric.","plan"],
+["niacin","D","Niacinamide serum","O","w5","1","4–5% strength.","plan"],
+["medsham","E","Medicated anti-dandruff shampoo","M","w1","1","Ketoconazole 2%, zinc pyrithione, or selenium sulfide.","plan"],
+["haircut1","E","First haircut at a good salon","M","w1","1","Short tapered sides, texture on top. Then every 3–4 weeks.","groom"],
+["comb","E","Wide-tooth comb","G","w1","1","Gentler on thinning hair.","groom"],
+["clay","E","Matte clay or paste","O","any","1 small tub","Water-based, light hold, matte. No heavy gel or wax.","groom"],
+["boil","E","Beard oil","O","any","1","Only if the beard feels rough. Light, non-greasy.","groom"],
+["multi","F","Basic multivitamin","M","w2","1 month","Near 100% of daily needs, iron-free or low-iron. Not a hair or fat-burn formula.","plan"],
+["b12","F","Vitamin B12","M","w2","1 pack","Take as per the label.","plan"],
+["d3","F","Vitamin D3","M","w2","1 pack","Total 1,000–2,000 IU a day. Avoid 60,000 IU sachets without a test.","plan"],
+["charger","G","Charger spot away from the bed","M","w1","1","Phone out of arm's reach at night.","plan"],
+["mask","G","Eye mask","G","w1","1","Contoured, so it doesn't press on the eyes.","plan"],
+["nrt","G","Nicotine gum or lozenges","G","w23","1 pack","Ask a pharmacist which strength suits 4 cigarettes a day.","plan"],
+["oxblue","H","Oxford shirt, light blue","M","A","1","Button-down collar, 100% cotton, shoulder seam on the shoulder bone.","A"],
+["oxwhite","H","Oxford shirt, white","G","A","1","Thick enough not to be see-through.","A"],
+["polonavy","H","Polo, navy","M","A","1","Piqué cotton, collar holds its shape, sleeve to mid-bicep.","A"],
+["polo2","H","Polo, maroon or olive","G","A","1","Same checks as the navy polo.","A"],
+["tees","H","Heavy cotton t-shirts","M","A","1–3","180+ GSM if listed. Navy, olive, white.","A"],
+["chinos","H","Chinos, beige or khaki","M","A","1","Mid-rise, slight stretch, straight or slim-tapered (not skinny).","A"],
+["vests","H","Undershirts (vests)","G","A","2","Thin cotton, white or skin-tone. Absorb sweat.","A"],
+["under","H","Underwear","M","A","5","Soft waistband that doesn't roll or dig in.","A"],
+["socks","H","Socks: no-show + dark formal","M","A","3 + 3 pairs","No-show with silicone heel grip; formal in navy, grey or black.","A"],
+["belt","I","Reversible belt (black/brown)","M","A","1","Plain buckle.","A"],
+["overshirt","H","Overshirt or light jacket","G","B","1","Olive or navy, worn open, hip-length (not cropped).","B"],
+["jeans","H","Dark indigo jeans","M","B","1","Mid-rise, straight or slim-tapered, no heavy distressing.","B"],
+["trousers","H","Formal trousers","G","B","1","Charcoal or navy, flat front, slight taper.","B"],
+["kurta","H","Festive kurta","G","fest","1","Knee-length straight cut in maroon, navy or bottle green.","B"],
+["sneakers","I","White minimal sneakers","G","B","1 pair","Leather or faux-leather, no big logos.","B"],
+["loafers","I","Brown loafers or derbies","G","B","1 pair","Mid or dark brown, rounded toe. Try on in the evening.","B"],
+["sliders","I","Sliders or sandals","G","any","1 pair","Plain, dark colour.","B"],
+["shades","I","Sunglasses","G","any","1","UV400. Rectangular or wayfarer shapes suit a fuller face.","B"],
+["bag","I","Office bag or backpack","G","any","1","Plain dark colour, structured, laptop sleeve.","B"],
+["watch","I","Watch","O","any","1","Simple dial, leather or metal strap.","B"],
+["wallet","I","Slim wallet","O","any","1","A bulging wallet ruins the line of trousers.","B"],
+["deo","J","Antiperspirant / deodorant","M","w1","1","Antiperspirant at night, deodorant in the morning.","groom"],
+["clipper","J","Nail clipper","M","w1","1","Sharp, with a file.","groom"],
+["nose","J","Nose and ear hair trimmer","M","w1","1","Check if your trimmer has an attachment first.","groom"],
+["tongue","J","Tongue cleaner + dental floss","M","w1","1 each","Waxed floss is easier.","groom"],
+["bodywash","J","Body wash or mild soap","M","w1","1","Fragrance-light.","groom"],
+["perfume","J","Perfume","O","B","1","Light, fresh daytime scent. Test on skin, wait 30 minutes.","groom"],
+["mouthwash","J","Mouthwash","O","any","1","Alcohol-free.","groom"],
+["iron","K","Iron or garment steamer","M","w1","1","Or use a local ironing service.","home"],
+["lint","K","Lint roller","G","w1","1","Refillable.","home"],
+["hangers","K","Shirt hangers","G","w1","5","Shaped shoulders, not thin wire.","home"],
+["shoecare","K","Shoe cleaning cloth + brush","G","w1","1 set","Plus wipes for white sneakers.","home"]
+].map(r=>({id:r[0],cat:r[1],name:r[2],pri:r[3],when:r[4],qty:r[5],look:r[6],bucket:r[7]}));
+const TIERS = {L:{name:"Lean",groom:800,A:3000,B:1200},S:{name:"Standard",groom:1500,A:5000,B:3500},F:{name:"Full",groom:2500,A:6500,B:6000}};
+const PRI = {M:["Must","m"],G:["Good","g"],O:["Optional","o"]};
+const shopSt = id => (S.shop||{})[id];
+const isDone = id => !!shopSt(id);
+const owned = id => isDone(id);
+function shopDay(){ return S.startDate ? Math.max(1,dayOf(planToday())) : 1; }
+function isDue(it,d){ const w = WHEN[it.when]; if(!w || !w[1]) return false; return d>=w[1] && d<=w[2]; }
+function isLate(it,d){ const w = WHEN[it.when]; return it.pri==="M" && w && w[2] && d>w[2] && d<60; }
+function dueList(d){ return SHOP.filter(it=>!isDone(it.id) && (isDue(it,d) || isLate(it,d))); }
+function spent(bucket){ let s = 0; for(const it of SHOP){ const st = shopSt(it.id); if(st && st.st==="bought" && it.bucket===bucket) s += (+st.price||0); } return s; }
+
+const OUTFITS = [
+ {id:"f1",type:"formal",name:"Sharp formal",top:"Light blue oxford, tucked",bottom:"Charcoal trousers",shoes:"Brown loafers + brown belt",why:"Blue flatters medium brown skin. Classic and sharp.",needs:["oxblue","trousers","belt"]},
+ {id:"f2",type:"formal",name:"Clean formal",top:"White oxford, tucked",bottom:"Charcoal or navy trousers",shoes:"Brown shoes + brown belt",why:"Crisp contrast; the dark bottom grounds the look.",needs:["oxwhite","trousers","belt"]},
+ {id:"f3",type:"formal",name:"Formal (until trousers arrive)",top:"Light blue oxford, tucked",bottom:"Beige chinos",shoes:"Your best closed shoes + matching belt",why:"Works before phase B trousers.",needs:["oxblue","chinos","belt"]},
+ {id:"b1",type:"biz",name:"Navy and beige",top:"Navy polo",bottom:"Beige chinos",shoes:"White sneakers or brown loafers",why:"Darker top, lighter bottom slims the upper body.",needs:["polonavy","chinos"]},
+ {id:"b2",type:"biz",name:"Rich colour",top:"Maroon or olive polo",bottom:"Dark indigo jeans",shoes:"Brown loafers",why:"Rich colour near the face, smart enough for meetings.",needs:["polo2","jeans"]},
+ {id:"b3",type:"biz",name:"Crisp casual",top:"White oxford, untucked, sleeves rolled twice",bottom:"Beige chinos",shoes:"White sneakers",why:"Relaxed but polished.",needs:["oxwhite","chinos"]},
+ {id:"c1",type:"casual",name:"Layered",top:"Olive t-shirt + open navy overshirt",bottom:"Dark jeans or chinos",shoes:"White sneakers",why:"The open layer draws a vertical line over the belly.",needs:["tees","overshirt"]},
+ {id:"c2",type:"casual",name:"Easy navy",top:"Navy t-shirt",bottom:"Beige chinos",shoes:"White sneakers",why:"Simple, fresh, slimming on top.",needs:["tees","chinos"]},
+ {id:"c3",type:"casual",name:"Polo day",top:"Navy polo",bottom:"Dark jeans",shoes:"White sneakers",why:"A structured collar beats a plain tee.",needs:["polonavy","jeans"]},
+ {id:"w1",type:"weekend",name:"Weekend fresh",top:"Navy or olive t-shirt",bottom:"Beige chinos, hem rolled once",shoes:"White sneakers or sliders",why:"Easy daytime look.",needs:["tees","chinos"]},
+ {id:"w2",type:"weekend",name:"Night out",top:"White t-shirt + open olive overshirt",bottom:"Dark jeans",shoes:"White sneakers",why:"Relaxed but put-together.",needs:["tees","overshirt","jeans"]},
+ {id:"w3",type:"weekend",name:"Dinner or date",top:"Navy polo or dark shirt, untucked",bottom:"Dark jeans",shoes:"Brown loafers + brown belt",why:"Head-to-toe dark is the most slimming.",needs:["polonavy","jeans","belt"]}
+];
+const DTYPE = {formal:"Formal",biz:"Business casual",casual:"Casual",weekend:"Weekend"};
+function dayType(k){ const dow = parseKey(k).getDay(); if(dow===0||dow===6) return "weekend"; return (S.settings.office||{})[dow] || "biz"; }
+function outfitFor(k){
+  const type = dayType(k), l = pk(k);
+  if(l.ootd){ const o = OUTFITS.find(x=>x.id===l.ootd); if(o) return {o,type,missing:o.needs.filter(n=>!owned(n)),worn:true}; }
+  const cands = OUTFITS.filter(o=>o.type===type), have = cands.filter(o=>o.needs.every(owned));
+  const pool = have.length ? have : cands;
+  const n = (S.startDate ? Math.max(0,dayOf(k)) : 0) + (l.shuf||0);
+  const o = pool[n % pool.length];
+  return {o,type,missing:o.needs.filter(x=>!owned(x)),worn:false};
+}
+function lastHaircut(before){
+  let last = null;
+  for(const k of Object.keys(S.logs)) if(k<before && S.logs[k].c && S.logs[k].c.haircut) if(!last || k>last) last = k;
+  const h1 = shopSt("haircut1"); if(h1 && h1.k && h1.k<before && (!last || h1.k>last)) last = h1.k;
+  return last;
+}
+function haircutDue(k){
+  if(!S.startDate || dayOf(k)<1) return false;
+  if((pk(k).c||{}).haircut) return true;
+  const dow = parseKey(k).getDay(); if(dow!==0 && dow!==6) return false;
+  const last = lastHaircut(k);
+  return !last || diffDays(last,k) >= 25;
+}
+
 function badgeList(){
   const logs = Object.keys(S.logs).sort().map(k=>[k,S.logs[k]]);
   const count = f => logs.filter(([k,l])=>f(l,k)).length;
@@ -472,6 +645,10 @@ function badgeList(){
     ["kg1","📉","First kilo","1 kg down (weekly average)",lost>=1],
     ["kg3","🎯","Three down","3 kg down",lost>=3],
     ["kg5","🏆","Five down","5 kg down",lost>=5],
+    ["cut","💈","Fresh cut","Get your first haircut",!!lastHaircut("9999-12-31")],
+    ["sharp","👔","Sharp week","Wear the outfit of the day 7 times",count(l=>!!l.ootd)>=7],
+    ["kit","🧰","Starter kit","Get every Week 1 must-have",SHOP.filter(i=>i.pri==="M"&&i.when==="w1").every(i=>isDone(i.id))],
+    ["budget","💰","Budget boss","Finish phase A within your budget",SHOP.filter(i=>i.bucket==="A"&&i.pri==="M").every(i=>isDone(i.id)) && spent("A")>0 && spent("A")<=TIERS[S.settings.tier||"S"].A],
     ["d30","🥉","Day 30","Reach Day 30",today>=30],
     ["d60","🥈","Day 60","Reach Day 60",today>=60],
     ["d90","🥇","Day 90","Finish the 90 days",today>=90]
@@ -552,6 +729,7 @@ function render(){
   if(ui.tab==="today") h += today();
   else if(ui.tab==="workout") h += workout();
   else if(ui.tab==="fuel") h += fuel();
+  else if(ui.tab==="style") h += style();
   else if(ui.tab==="stats") h += stats();
   else h += me();
   app.innerHTML = h;
@@ -610,6 +788,8 @@ function today(){
   const nx = nextTask(k,plan);
   if(nx && nx.done) h += '<div class="next clear"><div><div class="lbl">All clear</div><div class="t">Every quest done. Legend.</div></div><div style="font-size:34px">🏆</div></div>';
   else if(nx) h += '<div class="next"><div><div class="lbl">Next up, '+esc(nx.when)+'</div><div class="t">'+esc(nx.item.title)+'</div><div class="when">+'+nx.item.xp+' XP'+(onTimeWindow(k,nx.item)?', +5 on-time bonus':'')+'</div></div><button data-act="done" data-id="'+nx.item.id+'">Done</button></div>';
+  { const of = outfitFor(k), due = dueList(shopDay()).length;
+    h += '<button class="mini" data-tab="style"><span style="font-size:24px">👔</span><span class="mt">Outfit: <b>'+esc(of.o.name)+'</b>'+(of.worn?' ✓':'')+'<br>'+(due?'🛒 <b>'+due+'</b> item'+(due===1?'':'s')+' to buy now':'🛒 Shopping on track')+'</span><span class="go">Style ›</span></button>'; }
   h += '<p class="quote">'+esc(HYPE[(clampDay(plan.day)-1)%HYPE.length])+'</p>';
   if(plan.day>=1 && plan.day<=90) h += milestone(plan.day);
   const g = proteinGoal(plan.wk);
@@ -747,6 +927,67 @@ function drawChart(){
     '<text x="'+pl+'" y="12" font-size="12" fill="#B9AEDB">kg, weekly average, by week</text></svg>';
 }
 
+
+function style(){
+  const k = ui.view, dNow = shopDay(), tier = TIERS[S.settings.tier||"S"], f = ui.shopF||"due";
+  const of = outfitFor(k), o = of.o;
+  let h = '<div class="ootd"><span class="tp">'+esc(DTYPE[of.type])+(k===planToday()?' today':', '+esc(fmtShort(k)))+'</span><h2>'+esc(o.name)+(of.worn?' ✓':'')+'</h2>'+
+    '<div class="ln"><span>Top</span><div>'+esc(o.top)+'</div></div><div class="ln"><span>Bottom</span><div>'+esc(o.bottom)+'</div></div><div class="ln"><span>Shoes</span><div>'+esc(o.shoes)+'</div></div>'+
+    '<div class="why">'+esc(o.why)+'</div>'+(of.missing.length?'<div class="miss">Not marked as owned yet: '+esc(of.missing.map(id=>(SHOP.find(i=>i.id===id)||{name:id}).name).join(", "))+'. Mark them in the list below once you have them.</div>':'')+
+    '<div class="row">'+(of.worn?'<button class="btn ghost" data-act="unwear">Undo</button>':'<button class="btn" data-act="wear">Wore it +10 XP</button><button class="btn ghost" data-act="shuffle">Show another</button>')+'</div></div>';
+
+  const lh = lastHaircut(addDays(planToday(),1)), since = lh ? diffDays(lh,planToday()) : null;
+  h += '<div class="card"><h2>Haircut</h2><p class="muted">'+(lh?(since===0?'Haircut logged today. ':'Last haircut '+since+' day'+(since===1?'':'s')+' ago. ')+(since>=25?'Due now 💈':'Next one in about '+Math.max(0,25-since)+' days.'):'No haircut logged yet. Book one this week 💈')+'</p>'+
+    '<div class="row"><button class="btn'+(lh===planToday()?" ghost":"")+'" data-act="haircut">'+(lh===planToday()?'Logged today ✓':'Got a haircut today +20 XP')+'</button></div></div>';
+
+  const g = spent("groom"), a = spent("A"), b = spent("B"), plan = spent("plan")+spent("home");
+  const bk = (lbl,sp,al) => { const pct = Math.min(100,Math.round(sp/Math.max(1,al)*100)); return '<div class="bk"><div class="t"><b>'+lbl+'</b><span>₹'+sp.toLocaleString("en-IN")+' of ₹'+al.toLocaleString("en-IN")+'</span></div><div class="bar"><i class="'+(sp>al?"over":"")+'" style="width:'+pct+'%"></i></div></div>'; };
+  h += '<div class="card bud"><h2>Budget</h2><div class="chips">'+Object.keys(TIERS).map(t=>'<button data-act="tier" data-v="'+t+'" class="'+((S.settings.tier||"S")===t?"on":"")+'">'+TIERS[t].name+' ₹'+(TIERS[t].groom+TIERS[t].A+TIERS[t].B).toLocaleString("en-IN")+'</button>').join("")+'</div>'+
+    bk("Grooming",g,tier.groom)+bk("Clothes, phase A (now)",a,tier.A)+bk("Clothes, phase B (Day 60–90)",b,tier.B)+
+    '<p class="muted" style="margin-top:10px">Plan items spent so far (gym, food, skincare, supplements): ₹'+plan.toLocaleString("en-IN")+'. Not counted in the style budget.</p>'+
+    ((g>tier.groom||a>tier.A||b>tier.B)?'<p class="muted" style="color:#FF8FA3">Over budget in a bucket. Pause optional items or move money from phase B.</p>':'')+'</div>';
+
+  const due = dueList(dNow), done = SHOP.filter(i=>isDone(i.id)).length;
+  let list;
+  if(f==="due") list = due; else if(f==="must") list = SHOP.filter(i=>i.pri==="M"&&!isDone(i.id)); else if(f==="done") list = SHOP.filter(i=>isDone(i.id)); else list = SHOP;
+  h += '<div class="card"><h2>Shopping list</h2><div class="muted">'+done+' of '+SHOP.length+' done. Tap an item for what to look for.</div>'+
+    '<div class="bar" style="margin-top:8px"><i style="width:'+Math.round(done/SHOP.length*100)+'%"></i></div>'+
+    '<div class="chips">'+[["due","Due now ("+due.length+")"],["must","All must-haves"],["all","Everything"],["done","Done ("+done+")"]].map(x=>'<button data-act="shopf" data-v="'+x[0]+'" class="'+(f===x[0]?"on":"")+'">'+x[1]+'</button>').join("")+'</div>';
+  if(!list.length) h += '<p class="muted" style="margin-top:12px">'+(f==="due"?"Nothing due right now. Nice work. 🙌":"Nothing here yet.")+'</p>';
+  let lastCat = "";
+  for(const it of list){
+    if(it.cat!==lastCat){ h += '<div class="cat">'+esc(CATS[it.cat])+'</div>'; lastCat = it.cat; }
+    const st = shopSt(it.id), open = ui.openItem===it.id, w = WHEN[it.when];
+    h += '<div class="si'+(st?" done":"")+'"><div class="row1"><button class="hd" data-act="sopen" data-id="'+it.id+'"><span class="sn">'+esc(it.name)+'</span><span class="pl"><span class="pill '+PRI[it.pri][1]+'">'+PRI[it.pri][0]+'</span><span class="pill'+((isDue(it,dNow)||isLate(it,dNow))&&!st?" due":"")+'">'+(isLate(it,dNow)&&!st?"Overdue":esc(w[0]))+'</span><span class="pill">'+esc(it.qty)+'</span></span></button>'+
+      '<button class="sck" data-act="'+(st?"sundo":"squick")+'" data-id="'+it.id+'" aria-label="'+(st?"Undo ":"Mark done: ")+esc(it.name)+'">✓</button></div>';
+    if(open){
+      h += '<div class="sd"><div>'+esc(it.look)+'</div>';
+      if(st) h += '<div style="margin-top:8px">'+(st.st==="own"?"Already had it.":"Bought "+esc(fmtShort(st.k))+(st.price?" for ₹"+(+st.price).toLocaleString("en-IN"):""))+'</div><div class="row"><button class="btn ghost" data-act="sundo" data-id="'+it.id+'">Undo</button></div>';
+      else h += '<div class="row"><input type="number" inputmode="numeric" min="0" placeholder="₹ paid" data-price="'+it.id+'" aria-label="Price paid"><button class="btn" data-act="sbuy" data-id="'+it.id+'">Bought</button><button class="btn ghost" data-act="sown" data-id="'+it.id+'">Already have</button></div>';
+      h += '</div>';
+    }
+    h += '</div>';
+  }
+  h += '</div>';
+
+  const cps = [1,30,60,90], cur = cps.filter(c=>c<=dNow).pop()||1, m = (S.meas||{})[cur]||{};
+  const logsW = Object.keys(S.logs).sort().map(x=>S.logs[x]).filter(l=>l.wa).map(l=>+l.wa);
+  const drop = logsW.length>=2 ? logsW[0]-logsW[logsW.length-1] : 0;
+  const readyB = dNow>=60 || drop>=4;
+  h += '<div class="card"><h2>Measurements</h2><p class="muted">Day '+cur+' check-in, in cm. Used for buying the right sizes.</p><div class="meas">'+
+    [["ch","Chest"],["sh","Shoulders"],["tw","Trouser waist"]].map(x=>'<div class="f"><label for="m-'+x[0]+'">'+x[1]+'</label><input id="m-'+x[0]+'" type="number" step="0.5" inputmode="decimal" data-meas="'+x[0]+'" data-cp="'+cur+'" value="'+(m[x[0]]==null?"":esc(m[x[0]]))+'"></div>').join("")+'</div>'+
+    '<div class="banner" style="'+(readyB?'background:linear-gradient(135deg,#14503F,#1E2E5A);border-color:#2F8F72':'')+'"><h3>'+(readyB?'Phase B unlocked 🛍️':'Phase B is locked')+'</h3><ul><li>'+(readyB?'Time to buy jeans, trousers and shoes in your new size. Re-measure first.':'Unlocks at Day 60, or when your navel waist drops 4 cm (now: '+(drop>0?'−'+(Math.round(drop*10)/10):'0')+' cm).')+'</li></ul></div>';
+  const prev = cps.filter(c=>S.meas && S.meas[c] && Object.keys(S.meas[c]).length);
+  if(prev.length) h += '<div class="tbl"><table><tr><th>Check-in</th><th class="n">Chest</th><th class="n">Shoulders</th><th class="n">Trouser waist</th></tr>'+prev.map(c=>'<tr><td>Day '+c+'</td><td class="n">'+(S.meas[c].ch||"–")+'</td><td class="n">'+(S.meas[c].sh||"–")+'</td><td class="n">'+(S.meas[c].tw||"–")+'</td></tr>').join("")+'</table></div>';
+  h += '</div>';
+
+  h += '<div class="card"><h2>Style cheat sheet</h2>'+
+    det("Colours that suit you",["Wear often: navy, charcoal, olive, maroon, white, off-white, sky blue.","Accents: rust, mustard, forest green, teal, cream, light grey.","Avoid near the face: beige or brown close to your skin tone, neon, very pale peach or yellow."])+
+    det("Fit rules",["Shoulder seam on the shoulder bone; buttons never pull.","Untucked shirt hem at the middle of the zip.","Mid-rise trousers, straight or slightly tapered. No low-rise, no skinny.","Darker on top, lighter below slims the upper body.","Open layers (overshirt, jacket) draw a vertical line."])+
+    det("Grooming",["Haircut every 3–4 weeks: short tapered sides, texture on top.","Beard: short, neckline two fingers above the Adam's apple, chin a little longer than the sides.","Belt matches shoes. Iron everything for the office.","Fresh breath and no smoke smell beat any outfit."])+'</div>';
+  return h;
+}
+
 function me(){
   const s = S.settings, sw = (key,label,desc) => '<div class="tog"><div class="lbl"><b>'+label+'</b><span>'+desc+'</span></div><button class="sw'+(s[key]?" on":"")+'" data-act="sw" data-k="'+key+'" role="switch" aria-checked="'+!!s[key]+'" aria-label="'+label+'"></button></div>';
   let h = '<div class="card"><h2>Reminders</h2>'+(NATIVE?'':'<p class="muted">Reminders work in the installed Android app.</p>')+
@@ -754,6 +995,11 @@ function me(){
     sw("water","Water nudges","Extra pings at 11:30 am, 4:00 pm and 6:30 pm.")+
     '<div class="row"><button class="btn ghost" data-act="testnotif">Send a test in 5 seconds</button></div><p class="muted" id="nstatus" style="margin-top:8px">'+esc(notifStatus)+'</p>'+
     '<p class="muted">Not getting reminders? Phone Settings → Apps → 90 Days → Battery → Unrestricted. Xiaomi, Oppo, Vivo, Realme and some Samsung phones also need Autostart turned on. Keep a normal alarm for waking up.</p></div>';
+  const days = [[1,"Mon"],[2,"Tue"],[3,"Wed"],[4,"Thu"],[5,"Fri"]], off = S.settings.office||{};
+  h += '<div class="card"><h2>Style settings</h2><p class="muted">Your office dress pattern, used for the outfit of the day.</p>'+
+    days.map(([n,lbl])=>'<div class="dtrow"><b>'+lbl+'</b><div class="chips">'+[["formal","Formal"],["biz","Biz casual"],["casual","Casual"]].map(([v,t])=>'<button data-act="dtype" data-dow="'+n+'" data-v="'+v+'" class="'+((off[n]||"biz")===v?"on":"")+'">'+t+'</button>').join("")+'</div></div>').join("")+
+    '<p class="muted" style="margin-top:12px">Budget tier</p><div class="chips">'+Object.keys(TIERS).map(t=>'<button data-act="tier" data-v="'+t+'" class="'+((S.settings.tier||"S")===t?"on":"")+'">'+TIERS[t].name+'</button>').join("")+'</div>'+
+    sw("shopNotify","Shopping reminders","A Sunday notification listing what's due to buy this week.")+'</div>';
   h += '<div class="card"><h2>Feel</h2>'+sw("sound","Sounds","Rising chimes for every tick and level-up.")+sw("haptics","Vibration","A little buzz on every win.")+'</div>';
   h += '<div class="card"><h2>Guide</h2>'+
     det("Skin routine",["Morning: face wash, vitamin C serum (from Week 2), gel moisturiser, SPF 50 sunscreen.","Night: face wash, moisturiser, benzoyl peroxide 2.5% (every 2nd night in Weeks 3–4, then nightly).","Never vitamin C and benzoyl peroxide at the same time. BPO bleaches fabric.","Don't squeeze pimples. No acids on the bumps under your eyes."])+
@@ -813,6 +1059,17 @@ function toggleTask(k,id,el,force){
   } else { delete l.c[id]; award(k,"t:"+id,0); buzz(8); }
   setP(k); checkPerfect(k); rerender(); afterChange(prev);
 }
+function markShop(id,st,btn){
+  const prev = totalXP(), it = SHOP.find(i=>i.id===id); if(!it) return;
+  const inp = document.querySelector('[data-price="'+id+'"]'), price = inp && inp.value ? Math.max(0,Math.round(+inp.value)) : 0;
+  const tk = planToday();
+  S.shop = S.shop||{}; S.shop[id] = {st,k:tk,price:st==="bought"?price:0};
+  const amt = st==="bought" ? ({M:15,G:8,O:5})[it.pri] : 0;
+  if(amt) award(tk,"buy:"+id,amt);
+  const r = btn ? btn.getBoundingClientRect() : {left:innerWidth/2,top:innerHeight/2,width:0};
+  burst(r.left+r.width/2,r.top,24,6); if(amt) floatXP(r.left+r.width/2,r.top,"+"+amt+" 🛒"); sndCheck(); buzz(15);
+  ui.openItem = null; rerender(); afterChange(prev);
+}
 function proteinXP(k,btn){
   const plan = buildDay(k), g = proteinGoal(plan.wk), p = proteinOf(pk(k)), had = !!(pk(k).xp||{}).pt;
   if(p>=g[0] && !had){ award(k,"pt",20); if(btn){ const r = btn.getBoundingClientRect(); burst(r.left+r.width/2,r.top,40,7); floatXP(r.left+r.width/2,r.top,"+20 🥛"); } tone([660,880,1100],0.3); buzz([20,40,20]); }
@@ -862,9 +1119,19 @@ document.addEventListener("click",ev=>{
     case "testnotif": testNotif(); break;
     case "setstart": { const v = document.getElementById("sd").value; if(v){ S.startDate = v; save(); ui.view = planToday(); toast("Day 1 set to "+fmtShort(v)); render(); scheduleSoon(); } break; }
     case "backup": copyText(JSON.stringify(S)); break;
-    case "restore": { try{ const d = JSON.parse(document.getElementById("restoreTxt").value); if(!d || typeof d.logs!=="object") throw 0; S = Object.assign(fresh(),d,{onboarded:true}); S.settings = Object.assign({},DEF_SET,d.settings||{}); save(); toast("Backup restored ✅"); ui.view = null; render(); scheduleSoon(); }catch(e){ toast("That isn't a valid backup. Copy the whole text again and paste it."); } break; }
+    case "restore": { try{ const d = JSON.parse(document.getElementById("restoreTxt").value); if(!d || typeof d.logs!=="object") throw 0; S = Object.assign(fresh(),d,{onboarded:true}); S.settings = Object.assign(defSet(),d.settings||{}); save(); toast("Backup restored ✅"); ui.view = null; render(); scheduleSoon(); }catch(e){ toast("That isn't a valid backup. Copy the whole text again and paste it."); } break; }
     case "reset": if(!ui.confirmReset){ ui.confirmReset = true; rerender(); } else { S = fresh(); save(); ui.confirmReset = false; ui.onbStep = 1; ui.tab = "today"; ui.view = null; render(); scheduleSoon(); } break;
     case "closecel": document.getElementById("overlay").innerHTML = ""; break;
+    case "wear": { const prev = totalXP(), l = lg(k), of = outfitFor(k); l.ootd = of.o.id; award(k,"ootd",10); const r = t.getBoundingClientRect(); burst(r.left+r.width/2,r.top,30,6); floatXP(r.left+r.width/2,r.top,"+10 👔"); sndCheck(); buzz(20); rerender(); afterChange(prev); break; }
+    case "unwear": { const prev = totalXP(), l = lg(k); delete l.ootd; award(k,"ootd",0); rerender(); afterChange(prev); break; }
+    case "shuffle": { const l = lg(k); l.shuf = (l.shuf||0)+1; save(); tone([520],0.1,"sine",0.1); rerender(); break; }
+    case "tier": S.settings.tier = t.dataset.v; save(); rerender(); break;
+    case "dtype": S.settings.office = S.settings.office||{}; S.settings.office[t.dataset.dow] = t.dataset.v; save(); rerender(); scheduleSoon(); break;
+    case "shopf": ui.shopF = t.dataset.v; ui.openItem = null; rerender(); break;
+    case "sopen": ui.openItem = ui.openItem===t.dataset.id ? null : t.dataset.id; rerender(); break;
+    case "squick": case "sbuy": case "sown": markShop(t.dataset.id, a==="sown"?"own":"bought", t); break;
+    case "sundo": { const prev = totalXP(), id = t.dataset.id, st = shopSt(id); if(st){ if(st.k) award(st.k,"buy:"+id,0); delete S.shop[id]; } rerender(); afterChange(prev); break; }
+    case "haircut": { const tk = planToday(); if(!(pk(tk).c||{}).haircut){ const prev = totalXP(), l = lg(tk); l.c = l.c||{}; l.c.haircut = true; award(tk,"t:haircut",20); setP(tk); checkPerfect(tk); const r = t.getBoundingClientRect(); burst(r.left+r.width/2,r.top,40,7); floatXP(r.left+r.width/2,r.top,"+20 💈"); sndCheck(); buzz(20); rerender(); afterChange(prev); } break; }
     case "skiprest": stopRest(); break;
     case "addrest": restEnd += 30000; restTick(); break;
   }
@@ -876,6 +1143,11 @@ document.addEventListener("change",ev=>{
     if(v===""||v==null){ delete l[f]; award(k,"f:"+f,0); }
     else { const first = l[f]===undefined; l[f] = v; award(k,"f:"+f,3); if(first){ const r = t.getBoundingClientRect(); floatXP(r.left+r.width/2,r.top,"+3"); tone([700],0.1,"sine",0.1); } }
     save(); if(["w","wa","st","sl","al"].includes(f)) rerender(); afterChange(prev);
+  } else if(t.dataset.meas){
+    const prev = totalXP(), cp = t.dataset.cp; S.meas = S.meas||{}; S.meas[cp] = S.meas[cp]||{};
+    if(t.value==="") delete S.meas[cp][t.dataset.meas]; else S.meas[cp][t.dataset.meas] = t.value;
+    if(Object.keys(S.meas[cp]).length>=3) award(planToday(),"meas"+cp,10); else award(planToday(),"meas"+cp,0);
+    save(); rerender(); afterChange(prev);
   } else if(t.dataset.exlog){
     const l = lg(k); l.x = l.x||{}; const v = t.value.trim().slice(0,80); if(v) l.x[t.dataset.exlog] = v; else delete l.x[t.dataset.exlog]; save();
   }
@@ -924,7 +1196,7 @@ async function setupNative(){
       else if(a.actionId==="snooze"){
         try{ await LN.schedule({notifications:[{id:900000+Math.floor(Math.random()*90000),title:n.title||"Quest time",body:n.body||"",schedule:{at:new Date(Date.now()+15*60000),allowWhileIdle:true},channelId:"quests",actionTypeId:"QUEST",extra:ex,smallIcon:"ic_stat_icon",iconColor:"#FF6A3D"}]}); toast("Snoozed for 15 minutes ⏰"); }catch(e){}
       }
-      else if(ex.k){ ui.view = ex.k; ui.tab = "today"; render(); }
+      else if(ex.k){ ui.view = ex.k; ui.tab = ex.tab || "today"; render(); }
     });
     await LN.addListener("localNotificationReceived",n=>{ toast("⏰ "+(n.title||"Quest time")); });
     const p = await LN.checkPermissions();
@@ -942,7 +1214,7 @@ async function scheduleAll(){
     const pend = await LN.getPending();
     const old = (pend.notifications||[]).filter(n=>n.id<900000);
     if(old.length) await LN.cancel({notifications:old.map(n=>({id:n.id}))});
-    if(!S.startDate || !S.onboarded || (!S.settings.notify && !S.settings.water)){ setStatus("Reminders are off."); return; }
+    if(!S.startDate || !S.onboarded || (!S.settings.notify && !S.settings.water && !S.settings.shopNotify)){ setStatus("Reminders are off."); return; }
     const p = await LN.checkPermissions(); if(p.display!=="granted"){ setStatus("Notifications are blocked in phone settings."); return; }
     const now = Date.now(), list = []; let k = planToday();
     for(let i=0;i<10;i++, k = addDays(k,1)){
@@ -957,6 +1229,12 @@ async function scheduleAll(){
         list.push({id:base+45+j,title:w[1],body:w[2],schedule:{at,allowWhileIdle:true},channelId:"quests",extra:{k},smallIcon:"ic_stat_icon",iconColor:"#FF6A3D",autoCancel:true});
       });
     }
+    if(S.settings.shopNotify){ let kk = planToday(); for(let i=0;i<10;i++, kk = addDays(kk,1)){
+      if(parseKey(kk).getDay()!==0 || dayOf(kk)<1) continue;
+      const due = dueList(dayOf(kk)); if(!due.length) continue;
+      const at = taskDate(kk,"11:15 am"); if(at.getTime() <= Date.now()+30000) continue;
+      list.push({id:(epochDay(kk)%17000)*50+48,title:"🛒 Shopping this week: "+due.length+" item"+(due.length===1?"":"s"),body:due.slice(0,4).map(i=>i.name).join(", ")+(due.length>4?"…":"")+". Tick them in the Style tab for XP.",schedule:{at,allowWhileIdle:true},channelId:"quests",extra:{k:kk,tab:"style"},smallIcon:"ic_stat_icon",iconColor:"#FF6A3D",autoCancel:true});
+    } }
     if(list.length){ const r = await LN.schedule({notifications:list}); if(r && r.warning) setStatus("On, but your phone may delay reminders by a few minutes."); }
     const first = list.slice().sort((a,b)=>a.schedule.at-b.schedule.at)[0];
     setStatus(list.length ? "On: "+list.length+" reminders set for the next 10 days. Next: "+first.title+", "+first.schedule.at.toLocaleString("en-IN",{weekday:"short",hour:"numeric",minute:"2-digit"})+". Open the app at least once a week to keep them topped up." : "On. Nothing left to remind today.");
